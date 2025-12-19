@@ -233,57 +233,86 @@
 
                     <!-- 優惠列表 -->
                     <div class="card-list" id="offer-list">
-                        <!-- 卡片 1 -->
-                        <article class="card" data-bank="taishin" data-type="cash" data-keywords="網購 數位">
+                        <!-- 卡片 1: Fubon J Card -->
+                        <article class="card" data-bank="fubon" data-type="cash" data-keywords="網購 海外 旅遊">
                             <div class="card-header">
-                                <span class="card-bank">台新銀行</span>
-                                <!-- 這裡的按鈕是有功能的 -->
+                                <span class="card-bank">富邦銀行</span>
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
-                            <div class="card-title">@GoGo 卡 網購最高 6%</div>
+                            <div class="card-image-container">
+                                <img src="https://placehold.co/600x360/ffedee/d32f2f/?text=Fubon+J+Card" alt="富邦 J 卡示意圖" class="card-image">
+                            </div>
+                            <div class="card-title">富邦 J 卡 日本消費最高 5%</div>
                             <div class="card-body">
                                 <div class="card-meta">
-                                    <span class="badge shopping">網購</span>
-                                    <span class="badge digital">數位</span>
+                                    <span class="badge travel">旅遊</span>
+                                    <span class="badge shopping">海外</span>
                                     <span>期限：2025/12/31</span>
                                 </div>
-                                <button class="calendar-btn" onclick="addToCalendar('台新 @GoGo 網購優惠')">
+                                <button class="calendar-btn" onclick="addToCalendar('富邦 J 卡日本消費優惠')">
                                     <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
                                 </button>
                             </div>
                         </article>
 
-                        <!-- 卡片 2 -->
-                        <article class="card" data-bank="cathay" data-type="points" data-keywords="百貨 週年慶">
+                        <!-- 卡片 2: DBS eco Card -->
+                        <article class="card" data-bank="dbs" data-type="points" data-keywords="環保 綠色 永續">
                             <div class="card-header">
-                                <span class="card-bank">國泰世華</span>
+                                <span class="card-bank">星展銀行</span>
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
-                            <div class="card-title">CUBE 卡 百貨週年慶 15%</div>
+                            <div class="card-image-container">
+                                <img src="https://placehold.co/600x360/e8f5e9/2e7d32/?text=DBS+eco+Card" alt="星展 eco 永續卡示意圖" class="card-image">
+                            </div>
+                            <div class="card-title">星展 eco 永續卡 綠色消費 3%</div>
                             <div class="card-body">
                                 <div class="card-meta">
-                                    <span class="badge shopping">百貨</span>
-                                    <span class="badge hot">週年慶</span>
+                                    <span class="badge shopping">環保</span>
+                                    <span class="badge digital">永續</span>
                                 </div>
-                                <button class="calendar-btn" onclick="addToCalendar('CUBE 卡週年慶優惠')">
+                                <button class="calendar-btn" onclick="addToCalendar('星展 eco 永續卡綠色消費優惠')">
                                     <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
                                 </button>
                             </div>
                         </article>
                         
-                        <!-- 卡片 3 -->
-                         <article class="card" data-bank="sinopac" data-type="cash" data-keywords="數位 串流">
+                        <!-- 卡片 3: Union Jihe Card -->
+                        <article class="card" data-bank="union" data-type="cash" data-keywords="百貨 餐飲 交通">
                             <div class="card-header">
-                                <span class="card-bank">永豐銀行</span>
+                                <span class="card-bank">聯邦銀行</span>
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
-                            <div class="card-title">DAWHO 卡 數位通路 8%</div>
+                            <div class="card-image-container">
+                                <img src="https://placehold.co/600x360/ffebee/c62828/?text=Union+Jihe+Card" alt="聯邦吉鶴卡示意圖" class="card-image">
+                            </div>
+                            <div class="card-title">聯邦吉鶴卡 日本消費最高 10%</div>
                             <div class="card-body">
                                 <div class="card-meta">
-                                    <span class="badge digital">數位</span>
-                                    <span class="badge entertainment">娛樂</span>
+                                    <span class="badge travel">旅遊</span>
+                                    <span class="badge food">餐飲</span>
                                 </div>
-                                <button class="calendar-btn" onclick="addToCalendar('永豐 DAWHO 數位優惠')">
+                                <button class="calendar-btn" onclick="addToCalendar('聯邦吉鶴卡日本消費優惠')">
+                                    <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
+                                </button>
+                            </div>
+                        </article>
+
+                        <!-- 卡片 4: HSBC Live+ Card -->
+                        <article class="card" data-bank="hsbc" data-type="cash" data-keywords="娛樂 影音 串流">
+                            <div class="card-header">
+                                <span class="card-bank">滙豐銀行</span>
+                                <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
+                            </div>
+                            <div class="card-image-container">
+                                <img src="https://placehold.co/600x360/212121/ffffff/?text=HSBC+Live%2B" alt="滙豐 Live+ 卡示意圖" class="card-image">
+                            </div>
+                            <div class="card-title">滙豐 Live+ 卡 影音娛樂 8%</div>
+                            <div class="card-body">
+                                <div class="card-meta">
+                                    <span class="badge entertainment">娛樂</span>
+                                    <span class="badge digital">串流</span>
+                                </div>
+                                <button class="calendar-btn" onclick="addToCalendar('滙豐 Live+ 卡影音娛樂優惠')">
                                     <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
                                 </button>
                             </div>
