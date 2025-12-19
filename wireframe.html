@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卡優比 CardUbi - 完整 Wireframe 線框圖</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --accent: #f59e0b;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --muted: #94a3b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 48px;
+            font-size: 1.125rem;
+        }
+        
+        /* Page Flow Section */
+        .page-flow {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 48px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        
+        .page-flow h2 {
+            color: var(--primary);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        /* Wireframe Layout */
+        .wireframe-main {
+            display: grid;
+            gap: 32px;
+        }
+        
+        .wireframe-section {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            border: 2px solid var(--border);
+        }
+        
+        .wireframe-section h3 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-number {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+        
+        /* Wireframe Box Styles */
+        .wireframe-box {
+            background: #f1f5f9;
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        
+        .wireframe-box:last-child {
+            margin-bottom: 0;
+        }
+        
+        .wireframe-box h4 {
+            color: var(--secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+        
+        /* Button Indicator */
+        .btn-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 4px;
+        }
+        
+        .btn-indicator:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-indicator.secondary {
+            background: var(--secondary);
+        }
+        
+        .btn-indicator.accent {
+            background: var(--accent);
+        }
+        
+        .btn-indicator.success {
+            background: var(--success);
+        }
+        
+        .btn-indicator.danger {
+            background: var(--danger);
+        }
+        
+        /* Arrow Connector */
+        .arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            color: var(--accent);
+            font-size: 1.5rem;
+        }
+        
+        /* Modal Preview */
+        .modal-preview {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 12px;
+            position: relative;
+        }
+        
+        .modal-preview::before {
+            content: '📱 彈出結果';
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background: var(--primary);
+            color: white;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .modal-preview.page::before {
+            content: '🔗 跳轉頁面';
+            background: var(--success);
+        }
+        
+        .modal-preview.action::before {
+            content: '⚡ 執行動作';
+            background: var(--accent);
+        }
+        
+        .modal-preview.filter::before {
+            content: '🔍 篩選結果';
+            background: var(--secondary);
+        }
+        
+        /* Layout Containers */
+        .flex-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+        
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Placeholder Elements */
+        .placeholder {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            color: var(--secondary);
+            font-size: 0.875rem;
+        }
+        
+        .placeholder.header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+        }
+        
+        .placeholder.gold {
+            background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%);
+            color: #92400e;
+        }
+        
+        .placeholder.urgent {
+            background: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%);
+            color: #991b1b;
+        }
+        
+        .placeholder.ai {
+            background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+            color: #1e40af;
+        }
+        
+        /* Interaction List */
+        .interaction-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .interaction-list li {
+            padding: 12px 16px;
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 8px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .interaction-list li strong {
+            color: var(--primary);
+        }
+        
+        /* Code Block */
+        .code-ref {
+            background: #1e293b;
+            color: #a5f3fc;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'SF Mono', monospace;
+            font-size: 0.75rem;
+        }
+        
+        /* Flow Chart */
+        .flow-chart {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin-top: 16px;
+        }
+        
+        .flow-step {
+            flex-shrink: 0;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            text-align: center;
+            min-width: 140px;
+        }
+        
+        .flow-step.active {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+        
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+        
+        /* Screen Preview */
+        .screen-preview {
+            border: 3px solid #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            background: white;
+            max-width: 100%;
+        }
+        
+        .screen-header {
+            background: #1e293b;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .screen-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .screen-dot.red { background: #ef4444; }
+        .screen-dot.yellow { background: #f59e0b; }
+        .screen-dot.green { background: #22c55e; }
+        
+        .screen-content {
+            padding: 20px;
+            min-height: 200px;
+        }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 20px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            margin-bottom: 32px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+        
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        tr:hover {
+            background: #f8fafc;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .tag.popup { background: #dbeafe; color: #1e40af; }
+        .tag.navigate { background: #dcfce7; color: #166534; }
+        .tag.action { background: #fef3c7; color: #92400e; }
+        .tag.filter { background: #f3e8ff; color: #7c3aed; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎴 卡優比 CardUbi Wireframe</h1>
+        <p class="subtitle">完整頁面結構與按鈕互動流程圖</p>
+        
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #2563eb;"></div>
+                <span>主要按鈕</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #f59e0b;"></div>
+                <span>操作動作</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #22c55e;"></div>
+                <span>跳轉外連</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #64748b;"></div>
+                <span>篩選功能</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #ef4444;"></div>
+                <span>緊急/重要</span>
+            </div>
+        </div>
+
+        <!-- ========================================= -->
+        <!-- SECTION 1: 主頁面結構概覽 -->
+        <!-- ========================================= -->
+        <div class="page-flow">
+            <h2>📋 主頁面結構概覽</h2>
+            
+            <div class="screen-preview">
+                <div class="screen-header">
+                    <div class="screen-dot red"></div>
+                    <div class="screen-dot yellow"></div>
+                    <div class="screen-dot green"></div>
+                    <span style="color: white; margin-left: 12px; font-size: 0.875rem;">卡優比 CardUbi - 主頁</span>
+                </div>
+                <div class="screen-content">
+                    <div class="wireframe-box">
+                        <h4>① HEADER 區域</h4>
+                        <div class="placeholder header">Logo + 統計數據 + 登入 + 訂閱按鈕 + 搜尋欄</div>
+                    </div>
+                    <div class="wireframe-box">
+                        <h4>② 緊急優惠區 URGENT ZONE</h4>
+                        <div class="placeholder urgent">🔥 限時緊急優惠 - 橫向滾動卡片列表</div>
+                    </div>
+                    <div class="wireframe-box">
+                        <h4>③ 廣告 BANNER</h4>
+                        <div class="placeholder gold">贊助廣告 - 緯育 TibaMe</div>
+                    </div>
+                    <div class="grid-2" style="margin-top: 16px;">
+                        <div>
+                            <div class="wireframe-box">
+                                <h4>④ 百貨檔期神卡 PK</h4>
+                                <div class="placeholder">比較表格 - 新光三越 / SOGO / 遠東</div>
+                            </div>
+                            <div class="wireframe-box">
+                                <h4>⑤ 篩選控制區</h4>
+                                <div class="placeholder">發卡銀行 + 卡片類型篩選按鈕</div>
+                            </div>
+                            <div class="wireframe-box">
+                                <h4>⑥ 優惠卡片列表</h4>
+                                <div class="placeholder">信用卡優惠卡片 Grid</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="wireframe-box" style="height: 100%;">
+                                <h4>⑦ AI 刷卡顧問</h4>
+                                <div class="placeholder ai" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                                    聊天機器人介面
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wireframe-box" style="margin-top: 16px;">
+                        <h4>⑧ 卡片權益資訊 (可收合)</h4>
+                        <div class="placeholder">旅遊禮遇 / 餐廳優惠 / 航空待遇</div>
+                    </div>
+                    <div class="wireframe-box">
+                        <h4>⑨ FOOTER</h4>
+                        <div class="placeholder" style="background: #334155; color: white;">版權資訊</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================= -->
+        <!-- SECTION 2: 所有按鈕互動一覽表 -->
+        <!-- ========================================= -->
+        <div class="page-flow">
+            <h2>🖱️ 所有按鈕互動一覽表</h2>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>按鈕名稱</th>
+                            <th>位置</th>
+                            <th>ID / Class</th>
+                            <th>互動類型</th>
+                            <th>點擊後動作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><strong>Google 登入</strong></td>
+                            <td>Header 右上</td>
+                            <td><span class="code-ref">#google-login-btn</span></td>
+                            <td><span class="tag popup">彈窗</span></td>
+                            <td>跳出 Google OAuth 登入視窗</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><strong>登出</strong></td>
+                            <td>會員頭像旁</td>
+                            <td><span class="code-ref">#logout-btn</span></td>
+                            <td><span class="tag action">動作</span></td>
+                            <td>登出會員，恢復登入按鈕</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><strong>⭐ 訂閱平台</strong></td>
+                            <td>Header 下方</td>
+                            <td><span class="code-ref">#subscribe-btn</span></td>
+                            <td><span class="tag popup">彈窗</span></td>
+                            <td>Alert: "感謝訂閱！" + 計數器 +1</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><strong>搜尋框</strong></td>
+                            <td>Header</td>
+                            <td><span class="code-ref">#global-search</span></td>
+                            <td><span class="tag filter">篩選</span></td>
+                            <td>即時篩選卡片列表</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td><strong>緊急優惠卡片</strong></td>
+                            <td>緊急優惠區</td>
+                            <td><span class="code-ref">.urgent-card</span></td>
+                            <td><span class="tag navigate">跳轉</span></td>
+                            <td>跳轉到該優惠詳情頁 (待實作)</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td><strong>立即試聽</strong></td>
+                            <td>廣告 Banner</td>
+                            <td><span class="code-ref">.ad-btn</span></td>
+                            <td><span class="tag navigate">外連</span></td>
+                            <td>新分頁開啟 TibaMe 官網</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td><strong>銀行篩選 (全部/台新/中信/國泰/永豐)</strong></td>
+                            <td>篩選區</td>
+                            <td><span class="code-ref">#bank-filters .filter-btn</span></td>
+                            <td><span class="tag filter">篩選</span></td>
+                            <td>按銀行篩選卡片列表</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td><strong>類型篩選 (全部/哩程/現金/點數)</strong></td>
+                            <td>篩選區</td>
+                            <td><span class="code-ref">#type-filters .filter-btn</span></td>
+                            <td><span class="tag filter">篩選</span></td>
+                            <td>按卡片類型篩選列表</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td><strong>⭐ 追蹤卡片</strong></td>
+                            <td>每張卡片右上</td>
+                            <td><span class="code-ref">.card-subscribe-btn</span></td>
+                            <td><span class="tag popup">彈窗</span></td>
+                            <td>Alert: "已追蹤此卡！" + 變色 + 計數器 +1</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td><strong>📅 加入行事曆</strong></td>
+                            <td>每張卡片底部</td>
+                            <td><span class="code-ref">.calendar-btn</span></td>
+                            <td><span class="tag popup">彈窗</span></td>
+                            <td>Alert: "已將 [優惠名稱] 加入行事曆！"</td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td><strong>發送訊息</strong></td>
+                            <td>AI 聊天區</td>
+                            <td><span class="code-ref">#send-btn</span></td>
+                            <td><span class="tag action">動作</span></td>
+                            <td>發送訊息給 AI，顯示回覆</td>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td><strong>展開/收合更多</strong></td>
+                            <td>卡片權益區</td>
+                            <td><span class="code-ref">#info-toggle-btn</span></td>
+                            <td><span class="tag action">動作</span></td>
+                            <td>展開/收合資訊區塊</td>
+                        </tr>
+                        <tr>
+                            <td>13</td>
+                            <td><strong>探索旅遊優惠</strong></td>
+                            <td>卡片權益區</td>
+                            <td><span class="code-ref">.info-box .link</span></td>
+                            <td><span class="tag navigate">跳轉</span></td>
+                            <td>跳轉到旅遊優惠詳情頁 (待實作)</td>
+                        </tr>
+                        <tr>
+                            <td>14</td>
+                            <td><strong>查看餐飲禮遇</strong></td>
+                            <td>卡片權益區</td>
+                            <td><span class="code-ref">.info-box .link</span></td>
+                            <td><span class="tag navigate">跳轉</span></td>
+                            <td>跳轉到餐飲優惠詳情頁 (待實作)</td>
+                        </tr>
+                        <tr>
+                            <td>15</td>
+                            <td><strong>了解尊爵待遇</strong></td>
+                            <td>卡片權益區</td>
+                            <td><span class="code-ref">.info-box .link</span></td>
+                            <td><span class="tag navigate">跳轉</span></td>
+                            <td>跳轉到航空待遇詳情頁 (待實作)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========================================= -->
+        <!-- SECTION 3: 各區塊詳細 Wireframe -->
+        <!-- ========================================= -->
+        <div class="wireframe-main">
+            
+            <!-- Header 區塊 -->
+            <div class="wireframe-section">
+                <h3><span class="section-number">1</span> Header 區塊詳細</h3>
+                
+                <div class="screen-preview" style="margin-bottom: 20px;">
+                    <div class="screen-header">
+                        <div class="screen-dot red"></div>
+                        <div class="screen-dot yellow"></div>
+                        <div class="screen-dot green"></div>
+                    </div>
+                    <div class="screen-content" style="background: linear-gradient(180deg, rgba(255,252,252,0.9) 0%, rgba(255,255,255,0.85) 100%);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+                            <!-- Logo 區 -->
+                            <div>
+                                <div style="font-size: 1.5rem; font-weight: 700;">卡優比 <span style="color: #C9A227;">AI</span></div>
+                                <div style="color: #6E6E73; font-size: 0.875rem;">CardUbi 您的專屬消費管家</div>
+                            </div>
+                            
+                            <!-- 統計區 -->
+                            <div class="flex-row">
+                                <div class="placeholder" style="padding: 8px 16px; font-size: 0.75rem;">✈️ 累積里程: 54,321</div>
+                                <div class="placeholder" style="padding: 8px 16px; font-size: 0.75rem;">💰 全站回饋金: 2,345</div>
+                            </div>
+                            
+                            <!-- 登入區 -->
+                            <div>
+                                <button class="btn-indicator">🔐 Google 登入</button>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 16px; text-align: right;">
+                            <button class="btn-indicator accent">⭐ 訂閱這個平台</button>
+                        </div>
+                        
+                        <div style="margin-top: 16px;">
+                            <div style="background: white; border: 1px solid #ddd; border-radius: 20px; padding: 16px 20px 16px 48px; position: relative;">
+                                <span style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #D4A69C;">🔍</span>
+                                <span style="color: #AEAEB2;">搜尋優惠：輸入「日本」、「威秀」、「百貨」...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h4 style="margin-bottom: 12px;">按鈕互動流程：</h4>
+                
+                <div class="grid-2">
+                    <div>
+                        <div class="btn-indicator" style="margin-bottom: 8px;">🔐 Google 登入</div>
+                        <div class="modal-preview">
+                            <p><strong>Google OAuth 彈窗</strong></p>
+                            <ul style="margin-left: 20px; margin-top: 8px;">
+                                <li>選擇 Google 帳號</li>
+                                <li>授權登入</li>
+                                <li>登入成功 → 顯示頭像+名稱</li>
+                                <li>登入按鈕隱藏，顯示登出按鈕</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="btn-indicator accent" style="margin-bottom: 8px;">⭐ 訂閱這個平台</div>
+                        <div class="modal-preview action">
+                            <p><strong>執行動作：</strong></p>
+                            <ul style="margin-left: 20px; margin-top: 8px;">
+                                <li>Firebase 計數器 +1</li>
+                                <li>Alert 顯示 "感謝訂閱！"</li>
+                                <li>Header 統計數字更新</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <div class="btn-indicator secondary" style="margin-bottom: 8px;">🔍 搜尋框輸入</div>
+                    <div class="modal-preview filter">
+                        <p><strong>即時篩選：</strong></p>
+                        <p style="margin-top: 8px;">輸入關鍵字 → 即時過濾下方卡片列表</p>
+                        <p style="color: var(--muted); font-size: 0.875rem; margin-top: 8px;">
+                            比對：<code>data-keywords</code> + <code>.card-title</code>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 緊急優惠區 -->
+            <div class="wireframe-section">
+                <h3><span class="section-number">2</span> 緊急優惠區 (Urgent Zone)</h3>
+                
+                <div class="screen-preview" style="margin-bottom: 20px;">
+                    <div class="screen-header" style="background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);">
+                        <span style="color: white;">🔥 限時緊急優惠</span>
+                        <span style="color: white; margin-left: auto; font-size: 0.75rem; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px;">剩餘 23:59:59</span>
+                    </div>
+                    <div class="screen-content" style="background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); display: flex; gap: 16px; overflow-x: auto; padding: 16px;">
+                        <div style="flex-shrink: 0; background: white; border-radius: 12px; padding: 16px; width: 200px; position: relative;">
+                            <span style="position: absolute; top: 8px; right: 8px; background: #FF6B35; color: white; font-size: 0.625rem; padding: 2px 8px; border-radius: 10px;">倒數 2 天</span>
+                            <p style="font-size: 0.625rem; color: #888; text-transform: uppercase;">中信銀行</p>
+                            <p style="font-weight: 700; font-size: 0.875rem;">LINE Pay 卡 週末 8%</p>
+                        </div>
+                        <div style="flex-shrink: 0; background: white; border-radius: 12px; padding: 16px; width: 200px; position: relative;">
+                            <span style="position: absolute; top: 8px; right: 8px; background: #FF0000; color: white; font-size: 0.625rem; padding: 2px 8px; border-radius: 10px;">即將截止</span>
+                            <p style="font-size: 0.625rem; color: #888; text-transform: uppercase;">玉山銀行</p>
+                            <p style="font-weight: 700; font-size: 0.875rem;">Ubear 卡 外送 10%</p>
+                        </div>
+                        <div style="flex-shrink: 0; background: white; border-radius: 12px; padding: 16px; width: 200px; position: relative;">
+                            <span style="position: absolute; top: 8px; right: 8px; background: #FF6B35; color: white; font-size: 0.625rem; padding: 2px 8px; border-radius: 10px;">倒數 5 天</span>
+                            <p style="font-size: 0.625rem; color: #888; text-transform: uppercase;">台新銀行</p>
+                            <p style="font-weight: 700; font-size: 0.875rem;">@GoGo 日本 5% 加碼</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="btn-indicator danger" style="margin-bottom: 8px;">點擊緊急優惠卡片</div>
+                <div class="modal-preview page">
+                    <p><strong>預期跳轉：</strong>該優惠詳情頁</p>
+                    <p style="color: var(--muted); font-size: 0.875rem; margin-top: 8px;">⚠️ 目前尚未實作，建議新增詳情頁或 Modal</p>
+                    <div style="margin-top: 12px; padding: 12px; background: #fef3c7; border-radius: 8px;">
+                        <strong>建議實作方向：</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>跳轉到 <code>/offers/{offer-id}</code></li>
+                            <li>或彈出 Modal 顯示完整優惠資訊</li>
+                            <li>包含：申請連結、完整條款、回饋計算器</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 廣告 Banner -->
+            <div class="wireframe-section">
+                <h3><span class="section-number">3</span> 廣告 Banner</h3>
+                
+                <div class="screen-preview" style="margin-bottom: 20px;">
+                    <div class="screen-content" style="background: white; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span style="background: rgba(42,187,187,0.1); color: #2ABBBB; font-size: 0.625rem; padding: 2px 8px; border-radius: 4px;">贊助</span>
+                            <h3 style="color: #2ABBBB; font-size: 1.5rem; margin-top: 8px;">緯育 TibaMe</h3>
+                            <p style="color: #555; font-size: 0.875rem; margin: 8px 0;">提拔我的學習力，提升職場競爭力</p>
+                            <button class="btn-indicator success">立即試聽</button>
+                        </div>
+                        <div style="font-size: 2rem; font-weight: 700;">
+                            <span style="color: #E74C3C;">緯育</span> <span style="color: #2ABBBB; font-style: italic;">TibaMe</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="btn-indicator success" style="margin-bottom: 8px;">立即試聽</div>
+                <div class="modal-preview page">
+                    <p><strong>外部連結：</strong></p>
+                    <p style="margin-top: 8px;">🔗 <a href="https://www.tibame.com/" target="_blank" style="color: var(--primary);">https://www.tibame.com/</a></p>
+                    <p style="color: var(--muted); font-size: 0.875rem; margin-top: 8px;">開啟新分頁 (target="_blank")</p>
+                </div>
+            </div>
+
+            <!-- 篩選控制區 -->
+            <div class="wireframe-section">
+                <h3><span class="section-number">4</span> 篩選控制區</h3>
+                
+                <div class="screen-preview" style="margin-bottom: 20px;">
+                    <div class="screen-content" style="background: linear-gradient(165deg, rgba(255,255,255,0.85) 0%, rgba(245,240,235,0.8) 100%); border-left: 4px solid; border-image: linear-gradient(180deg, #E8BDB5, #C9A227) 1;">
+                        <div style="margin-bottom: 16px;">
+                            <p style="font-size: 0.75rem; color: #6E6E73; text-transform: uppercase; margin-bottom: 8px;">🏦 發卡銀行</p>
+                            <div class="flex-row">
+                                <button class="btn-indicator" style="background: #1D1D1F;">全部</button>
+                                <button class="btn-indicator secondary">台新</button>
+                                <button class="btn-indicator secondary">中信</button>
+                                <button class="btn-indicator secondary">國泰</button>
+                                <button class="btn-indicator secondary">永豐</button>
+                            </div>
+                        </div>
+                        <div>
+                            <p style="font-size: 0.75rem; color: #6E6E73; text-transform: uppercase; margin-bottom: 8px;">💳 卡片類型</p>
+                            <div class="flex-row">
+                                <button class="btn-indicator" style="background: #1D1D1F;">全部</button>
+                                <button class="btn-indicator secondary">哩程卡</button>
+                                <button class="btn-indicator secondary">現金回饋</button>
+                                <button class="btn-indicator secondary">點數卡</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="btn-indicator secondary" style="margin-bottom: 8px;">點擊任一篩選按鈕</div>
+                <div class="modal-preview filter">
+                    <p><strong>篩選流程：</strong></p>
+                    <div class="flow-chart">
+                        <div class="flow-step active">點擊按鈕</div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-step">移除其他 .active</div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-step">添加 .active</div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-step active">篩選卡片</div>
+                    </div>
+                    <p style="margin-top: 12px; color: var(--muted); font-size: 0.875rem;">
+                        比對：<code>data-bank</code> + <code>data-type</code> 屬性
+                    </p>
+                </div>
+            </div>
+
+            <!-- 優惠卡片 -->
+            <div class="wireframe-section">
+                <h3><span class="section-number">5</span> 優惠卡片互動</h3>
+                
+                <div class="screen-preview" style="margin-bottom: 20px;">
+                    <div class="screen-content" style="background: linear-gradient(165deg, rgba(255,255,255,0.9) 0%, rgba(250,245,240,0.85) 100%);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <span style="font-size: 0.75rem; color: #86868B; text-transform: uppercase;">台新銀行</span>
+                            <button class="btn-indicator" style="width: 36px; height: 36px; padding: 0; border-radius: 50%;">⭐</button>
+                        </div>
+                        <h4 style="font-size: 1.25rem; font-weight: 700; margin: 12px 0;">@GoGo 卡日本旅遊 3.8%</h4>
+                        <div class="flex-row" style="margin-bottom: 12px;">
+                            <span style="background: rgba(50,173,230,0.12); color: #0A7EA4; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem;">旅遊</span>
+                            <span style="color: #6E6E73; font-size: 0.75rem;">期限：2025/12/31</span>
+                        </div>
+                        <button class="btn-indicator secondary" style="width: 100%;">📅 加入行事曆</button>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div>
+                        <div class="btn-indicator accent" style="margin-bottom: 8px;">⭐ 追蹤此卡</div>
+                        <div class="modal-preview action">
+                            <p><strong>執行動作：</strong></p>
+                            <ul style="margin-left: 20px; margin-top: 8px;">
+                                <li>Firebase 計數器 +1</li>
+                                <li>按鈕變成金色 (#fbbf24)</li>
+                                <li>Alert: "已追蹤此卡！"</li>
+                                <li>Header「卡片追蹤」數字 +1</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="btn-indicator secondary" style="margin-bottom: 8px;">📅 加入行事曆</div>
+                        <div class="modal-preview">
+                            <p><strong>Alert 訊息：</strong></p>
+                            <div style="background: #f1f5f9; padding: 12px; border-radius: 8px; margin-top: 8px; font-family: monospace;">
+                                ✅ 已將「台新 @GoGo 日本旅遊優惠」加入行事曆！
+                            </div>
+                            <p style="color: var(--muted); font-size: 0.875rem; margin-top: 8px;">⚠️ 目前僅顯示 Alert，建議整合真實行事曆 API</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <div class="btn-indicator" style="margin-bottom: 8px;">點擊整張卡片</div>
+                    <div class="modal-preview page">
+                        <p><strong>預期跳轉：</strong>優惠詳情頁</p>
+                        <p style="color: var(--muted); font-size: 0.875rem; margin-top: 8px;">⚠️ 目前尚未實作 click 事件</p>
+                        <div style="margin-top: 12px; padding: 12px; background: #fef3c7; border-radius: 8px;">
+                            <strong>建議新增頁面：</strong> <code>/card/{card-id}</code>
+                            <ul style="margin-left: 20px; margin-top: 8px;">
+                                <li>完整優惠說明</li>
+                                <li>申請條件與連結</li>
+                                <li>回饋計算器</li>
+                                <li>相關優惠推薦</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI 刷卡顧問 -->
+            <div class="wireframe-section">
+                <h3><span class="section-number">6</span> AI 刷卡顧問</h3>
+                
+                <div class="screen-preview" style="margin-bottom: 20px;">
+                    <div class="screen-content" style="background: linear-gradient(180deg, rgba(245,240,235,0.92) 0%, rgba(225,218,210,0.85) 100%);">
+                        <div style="display: flex; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid #ddd; margin-bottom: 12px;">
+                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #E5B94E, #C9A227); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">🤖</div>
+                            <div>
+                                <p style="font-weight: 700;">AI 刷卡顧問</p>
+                                <p style="font-size: 0.75rem; color: #22c55e;">● 線上</p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #E8E8ED; padding: 12px 16px; border-radius: 20px; margin-bottom: 8px; max-width: 85%;">
+                            您好！我是卡優比的 AI 顧問。告訴我您想買什麼...
+                        </div>
+                        
+                        <div style="background: linear-gradient(180deg, #4DA3FF, #007AFF); color: white; padding: 12px 16px; border-radius: 20px; margin-bottom: 12px; max-width: 85%; margin-left: auto;">
+                            我要去日本買電器
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; margin-top: 12px;">
+                            <input type="text" placeholder="輸入消費情境..." style="flex: 1; padding: 12px 16px; border: 1px solid #ddd; border-radius: 24px; font-size: 0.875rem;">
+                            <button class="btn-indicator" style="width: 44px; height: 44px; padding: 0; border-radius: 50%;">📤</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="btn-indicator" style="margin-bottom: 8px;">發送訊息</div>
+                <div class="modal-preview action">
+                    <p><strong>AI 回覆流程：</strong></p>
+                    <div class="flow-chart">
+                        <div class="flow-step active">輸入訊息</div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-step">顯示 Loading</div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-step">呼叫 Netlify Function</div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-step">Gemini API</div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-step active">顯示回覆</div>
+                    </div>
+                    <p style="margin-top: 12px; color: var(--muted); font-size: 0.875rem;">
+                        後端：<code>/.netlify/functions/chat</code>
+                    </p>
+                </div>
+            </div>
+
+            <!-- 卡片權益資訊區 -->
+            <div class="wireframe-section">
+                <h3><span class="section-number">7</span> 卡片權益資訊區 (可收合)</h3>
+                
+                <div class="screen-preview" style="margin-bottom: 20px;">
+                    <div class="screen-content">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h2 style="font-size: 1.5rem; font-weight: 700;">卡片權益資訊</h2>
+                            <button class="btn-indicator secondary">展開更多 ▼</button>
+                        </div>
+                        
+                        <div class="grid-3">
+                            <div style="background: linear-gradient(165deg, rgba(255,255,255,0.9), rgba(240,230,220,0.8)); padding: 24px; border-radius: 16px;">
+                                <div style="font-size: 2rem; margin-bottom: 12px;">🌍</div>
+                                <h4 style="font-weight: 700; margin-bottom: 8px;">全球旅遊禮遇</h4>
+                                <p style="font-size: 0.875rem; color: #6E6E73; margin-bottom: 12px;">機場接送、飯店折扣...</p>
+                                <a href="#" style="color: #B76E79; font-weight: 600; text-decoration: none;">探索旅遊優惠 →</a>
+                            </div>
+                            <div style="background: linear-gradient(165deg, rgba(255,255,255,0.9), rgba(240,230,220,0.8)); padding: 24px; border-radius: 16px;">
+                                <div style="font-size: 2rem; margin-bottom: 12px;">🍽️</div>
+                                <h4 style="font-weight: 700; margin-bottom: 8px;">摘星餐廳優惠</h4>
+                                <p style="font-size: 0.875rem; color: #6E6E73; margin-bottom: 12px;">米其林餐廳兩人同行...</p>
+                                <a href="#" style="color: #B76E79; font-weight: 600; text-decoration: none;">查看餐飲禮遇 →</a>
+                            </div>
+                            <div style="background: linear-gradient(165deg, rgba(255,255,255,0.9), rgba(240,230,220,0.8)); padding: 24px; border-radius: 16px;">
+                                <div style="font-size: 2rem; margin-bottom: 12px;">✈️</div>
+                                <h4 style="font-weight: 700; margin-bottom: 8px;">航空尊爵待遇</h4>
+                                <p style="font-size: 0.875rem; color: #6E6E73; margin-bottom: 12px;">貴賓室、哩程加速...</p>
+                                <a href="#" style="color: #B76E79; font-weight: 600; text-decoration: none;">了解尊爵待遇 →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div>
+                        <div class="btn-indicator secondary" style="margin-bottom: 8px;">展開更多 / 收合資訊</div>
+                        <div class="modal-preview action">
+                            <p><strong>切換狀態：</strong></p>
+                            <ul style="margin-left: 20px; margin-top: 8px;">
+                                <li>Toggle <code>.collapsed</code> class</li>
+                                <li>圖示旋轉 180°</li>
+                                <li>文字切換：展開更多 ↔ 收合資訊</li>
+                                <li>Grid 區塊 展開/收合動畫</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="btn-indicator success" style="margin-bottom: 8px;">探索優惠連結</div>
+                        <div class="modal-preview page">
+                            <p><strong>預期跳轉：</strong>分類詳情頁</p>
+                            <p style="color: var(--muted); font-size: 0.875rem; margin-top: 8px;">⚠️ 目前 href="#" 尚未實作</p>
+                            <div style="margin-top: 12px; padding: 12px; background: #fef3c7; border-radius: 8px;">
+                                <strong>建議新增頁面：</strong>
+                                <ul style="margin-left: 20px; margin-top: 8px;">
+                                    <li><code>/benefits/travel</code> - 旅遊優惠</li>
+                                    <li><code>/benefits/dining</code> - 餐飲禮遇</li>
+                                    <li><code>/benefits/airport</code> - 航空待遇</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================= -->
+            <!-- 建議新增的頁面 -->
+            <!-- ========================================= -->
+            <div class="wireframe-section" style="border-color: var(--accent);">
+                <h3><span class="section-number" style="background: var(--accent);">+</span> 建議新增的頁面</h3>
+                
+                <div class="grid-2">
+                    <div class="wireframe-box">
+                        <h4>📄 優惠詳情頁</h4>
+                        <p style="font-size: 0.875rem; color: var(--secondary); margin-bottom: 12px;">
+                            路徑：<code>/offers/{offer-id}</code>
+                        </p>
+                        <ul class="interaction-list">
+                            <li>完整優惠說明</li>
+                            <li>適用通路與條件</li>
+                            <li>申請銀行官網連結</li>
+                            <li>回饋計算器</li>
+                            <li>用戶評論與心得</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="wireframe-box">
+                        <h4>💳 信用卡詳情頁</h4>
+                        <p style="font-size: 0.875rem; color: var(--secondary); margin-bottom: 12px;">
+                            路徑：<code>/cards/{card-id}</code>
+                        </p>
+                        <ul class="interaction-list">
+                            <li>卡片完整資訊</li>
+                            <li>所有相關優惠列表</li>
+                            <li>年費與門檻</li>
+                            <li>申請連結</li>
+                            <li>比較功能</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="wireframe-box">
+                        <h4>👤 會員中心</h4>
+                        <p style="font-size: 0.875rem; color: var(--secondary); margin-bottom: 12px;">
+                            路徑：<code>/member</code>
+                        </p>
+                        <ul class="interaction-list">
+                            <li>我追蹤的卡片</li>
+                            <li>我的行事曆提醒</li>
+                            <li>消費記錄</li>
+                            <li>個人設定</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="wireframe-box">
+                        <h4>🎯 分類優惠頁</h4>
+                        <p style="font-size: 0.875rem; color: var(--secondary); margin-bottom: 12px;">
+                            路徑：<code>/benefits/{category}</code>
+                        </p>
+                        <ul class="interaction-list">
+                            <li>旅遊優惠專區</li>
+                            <li>餐飲優惠專區</li>
+                            <li>航空禮遇專區</li>
+                            <li>百貨週年慶專區</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ========================================= -->
+        <!-- 完整用戶旅程 -->
+        <!-- ========================================= -->
+        <div class="page-flow" style="margin-top: 48px;">
+            <h2>🚀 用戶旅程地圖</h2>
+            
+            <div class="flow-chart" style="justify-content: center;">
+                <div class="flow-step active">
+                    <p style="font-size: 1.5rem; margin-bottom: 4px;">🏠</p>
+                    <p style="font-weight: 700;">首頁</p>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">
+                    <p style="font-size: 1.5rem; margin-bottom: 4px;">🔍</p>
+                    <p style="font-weight: 700;">搜尋/篩選</p>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">
+                    <p style="font-size: 1.5rem; margin-bottom: 4px;">💳</p>
+                    <p style="font-weight: 700;">查看卡片</p>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">
+                    <p style="font-size: 1.5rem; margin-bottom: 4px;">🤖</p>
+                    <p style="font-weight: 700;">AI 諮詢</p>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">
+                    <p style="font-size: 1.5rem; margin-bottom: 4px;">⭐</p>
+                    <p style="font-weight: 700;">追蹤/訂閱</p>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step active">
+                    <p style="font-size: 1.5rem; margin-bottom: 4px;">🎉</p>
+                    <p style="font-weight: 700;">申請辦卡</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
+

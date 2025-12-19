@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8" />
+    <title>卡優比 CardUbi - 您的智慧刷卡顧問</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="style.css" />
+    <!-- 引入 Font Awesome 用於圖示 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo-area">
+                    <h1>卡優比 <span class="highlight">AI</span></h1>
+                    <p class="subtitle header-hideable">CardUbi 您的專屬消費管家</p>
+                </div>
+                
+                <div class="header-stats-group header-hideable">
+                    <!-- 即時跳動儀表板 (裝飾用) -->
+                    <div class="live-stats-container">
+                        <div class="live-stat">
+                            <i class="fa-solid fa-plane-departure"></i>
+                            <div class="stat-info">
+                                <span class="label">累積里程</span>
+                                <span class="number" id="miles-ticker">0</span>
+                            </div>
+                        </div>
+                        <div class="live-stat">
+                            <i class="fa-solid fa-coins"></i>
+                            <div class="stat-info">
+                                <span class="label">全站回饋金</span>
+                                <span class="number" id="cashback-ticker">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ▼▼▼ (修復) 加回真實統計數據 ▼▼▼ -->
+                    <div class="real-stats-box">
+                        <div class="stat-item">
+                            <span class="label">瀏覽人次：</span>
+                            <span id="page-views" class="value">--</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">平台訂閱：</span>
+                            <span id="subscribe-clicks" class="value">--</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">卡片追蹤：</span>
+                            <span id="card-subscribes" class="value">--</span>
+                        </div>
+                    </div>
+                    <!-- ▲▲▲ (修復) 加回真實統計數據 ▲▲▲ -->
+                </div>
+
+                <!-- 會員區塊 User Area -->
+                <div class="user-area" id="user-area">
+                    <button id="google-login-btn" class="google-login-btn">
+                        <i class="fa-brands fa-google"></i>
+                        <span>登入</span>
+                    </button>
+                    <div id="user-profile" class="user-profile" style="display: none;">
+                        <img id="user-avatar" class="user-avatar" src="" alt="用戶頭像">
+                        <div class="user-info">
+                            <span id="user-name" class="user-name">會員</span>
+                            <button id="logout-btn" class="logout-btn">登出</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 訂閱按鈕 -->
+            <div class="subscribe-area header-hideable" style="margin-top: 1rem; text-align: right;">
+                 <button id="subscribe-btn" class="subscribe-btn">
+                    ⭐ 訂閱這個平台
+                </button>
+            </div>
+
+            <!-- 搜尋欄位 -->
+            <div class="search-bar-container">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="global-search" placeholder="搜尋優惠：輸入「日本」、「威秀」、「百貨」...">
+            </div>
+        </div>
+    </header>
+
+    <!-- 緊急優惠區 Urgent Zone -->
+    <section class="urgent-zone">
+        <div class="container">
+            <div class="urgent-header">
+                <span class="urgent-icon">🔥</span>
+                <h3>限時緊急優惠</h3>
+                <span class="urgent-countdown" id="urgent-countdown">剩餘 23:59:59</span>
+            </div>
+            <div class="urgent-scroll-container">
+                <div class="urgent-cards" id="urgent-cards">
+                    <div class="urgent-card">
+                        <div class="urgent-badge">倒數 2 天</div>
+                        <div class="urgent-card-content">
+                            <span class="urgent-bank">中信銀行</span>
+                            <h4>LINE Pay 卡 週末 8% 回饋</h4>
+                            <p>綁定支付滿 $500 享回饋</p>
+                        </div>
+                    </div>
+                    <div class="urgent-card">
+                        <div class="urgent-badge hot">即將截止</div>
+                        <div class="urgent-card-content">
+                            <span class="urgent-bank">玉山銀行</span>
+                            <h4>Ubear 卡 外送平台 10%</h4>
+                            <p>foodpanda / Uber Eats 限定</p>
+                        </div>
+                    </div>
+                    <div class="urgent-card">
+                        <div class="urgent-badge">倒數 5 天</div>
+                        <div class="urgent-card-content">
+                            <span class="urgent-bank">台新銀行</span>
+                            <h4>@GoGo 卡 日本 5% 加碼</h4>
+                            <p>日本消費再享額外回饋</p>
+                        </div>
+                    </div>
+                    <div class="urgent-card">
+                        <div class="urgent-badge hot">最後 1 天</div>
+                        <div class="urgent-card-content">
+                            <span class="urgent-bank">國泰世華</span>
+                            <h4>CUBE 卡 百貨週年慶 12%</h4>
+                            <p>指定百貨刷卡享高回饋</p>
+                        </div>
+                    </div>
+                    <div class="urgent-card">
+                        <div class="urgent-badge">倒數 3 天</div>
+                        <div class="urgent-card-content">
+                            <span class="urgent-bank">永豐銀行</span>
+                            <h4>SPORT 卡 健身房 15%</h4>
+                            <p>World Gym / 健身工廠適用</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <div class="container">
+            
+            <!-- 廣告 Banner -->
+            <div class="ad-banner">
+                <span class="ad-watermark">廣告 banner</span>
+                <div class="ad-content">
+                    <span class="ad-badge">贊助</span>
+                    <h3>緯育 TibaMe</h3>
+                    <p>提拔我的學習力，提升職場競爭力 | 全方位數位人才培訓</p>
+                    <a href="https://www.tibame.com/" target="_blank" class="ad-btn">立即試聽</a>
+                </div>
+                <div class="ad-logo">
+                    <img src="https://www.tibame.com/static/img/tibame-logo.svg" alt="TibaMe Logo" onerror="this.parentElement.innerHTML='<span class=\'ad-logo-text\'><span class=\'ad-logo-zh\'>緯育</span> <span class=\'ad-logo-en\'>TibaMe</span></span>'">
+                </div>
+                <div class="ad-bg-effect"></div>
+            </div>
+
+            <div class="content-grid">
+                <!-- 左側主內容 -->
+                <div class="main-content">
+                    
+                    <!-- 百貨優惠整合 -->
+                    <section class="dept-store-section">
+                        <div class="section-header">
+                            <h2><i class="fa-solid fa-shop"></i> 百貨檔期神卡 PK</h2>
+                            <span class="tag-pulse">週年慶熱戰中</span>
+                        </div>
+                        <div class="comparison-table">
+                            <div class="comp-header">
+                                <div>通路</div>
+                                <div>首選神卡</div>
+                                <div>回饋率</div>
+                                <div>備註</div>
+                            </div>
+                            <div class="comp-row">
+                                <div>新光三越</div>
+                                <div class="best-card">台新玫瑰卡</div>
+                                <div class="rate">10%</div>
+                                <div>滿額贈禮券</div>
+                            </div>
+                            <div class="comp-row">
+                                <div>SOGO</div>
+                                <div class="best-card">國泰 CUBE</div>
+                                <div class="rate">3%~12%</div>
+                                <div>切換權益</div>
+                            </div>
+                            <div class="comp-row">
+                                <div>遠東大遠百</div>
+                                <div class="best-card">遠東樂家卡</div>
+                                <div class="rate">8%</div>
+                                <div>週末加碼</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 雙層篩選系統 -->
+                    <section class="filter-controls">
+                        <div class="filter-row-group">
+                            <label><i class="fa-solid fa-building-columns"></i> 發卡銀行</label>
+                            <div class="filters" id="bank-filters">
+                                <button class="filter-btn active" data-filter="all">全部</button>
+                                <button class="filter-btn" data-filter="taishin">台新</button>
+                                <button class="filter-btn" data-filter="ctbc">中信</button>
+                                <button class="filter-btn" data-filter="cathay">國泰</button>
+                                <button class="filter-btn" data-filter="sinopac">永豐</button>
+                            </div>
+                        </div>
+                        <div class="filter-row-group">
+                            <label><i class="fa-solid fa-credit-card"></i> 卡片類型</label>
+                            <div class="filters" id="type-filters">
+                                <button class="filter-btn active" data-filter="all">全部</button>
+                                <button class="filter-btn" data-filter="miles">哩程卡</button>
+                                <button class="filter-btn" data-filter="cash">現金回饋</button>
+                                <button class="filter-btn" data-filter="points">點數卡</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 優惠列表 -->
+                    <div class="card-list" id="offer-list">
+                        <!-- 卡片 1 -->
+                        <article class="card" data-bank="taishin" data-type="points" data-keywords="旅遊 日本">
+                            <div class="card-header">
+                                <span class="card-bank">台新銀行</span>
+                                <!-- 這裡的按鈕是有功能的 -->
+                                <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
+                            </div>
+                            <div class="card-title">@GoGo 卡日本旅遊 3.8%</div>
+                            <div class="card-body">
+                                <div class="card-meta">
+                                    <span class="badge travel">旅遊</span>
+                                    <span>期限：2025/12/31</span>
+                                </div>
+                                <button class="calendar-btn" onclick="addToCalendar('台新 @GoGo 日本旅遊優惠')">
+                                    <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
+                                </button>
+                            </div>
+                        </article>
+
+                        <!-- 卡片 2 -->
+                        <article class="card" data-bank="cathay" data-type="points" data-keywords="百貨 餐飲">
+                            <div class="card-header">
+                                <span class="card-bank">國泰世華</span>
+                                <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
+                            </div>
+                            <div class="card-title">CUBE 卡 樂饗購 3% 無上限</div>
+                            <div class="card-body">
+                                <div class="card-meta">
+                                    <span class="badge food">餐飲</span>
+                                    <span class="badge shopping">百貨</span>
+                                </div>
+                                <button class="calendar-btn" onclick="addToCalendar('CUBE 卡權益切換提醒')">
+                                    <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
+                                </button>
+                            </div>
+                        </article>
+                        
+                        <!-- 卡片 3 -->
+                         <article class="card" data-bank="sinopac" data-type="cash" data-keywords="電影 運動">
+                            <div class="card-header">
+                                <span class="card-bank">永豐銀行</span>
+                                <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
+                            </div>
+                            <div class="card-title">SPORT 卡 Apple Pay 7%</div>
+                            <div class="card-body">
+                                <div class="card-meta">
+                                    <span class="badge sport">運動</span>
+                                    <span class="badge movie">娛樂</span>
+                                </div>
+                                <button class="calendar-btn" onclick="addToCalendar('永豐 SPORT 汗水不白流')">
+                                    <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
+                                </button>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- AI 顧問 (右側欄) -->
+                <aside class="ai-sidebar">
+                    <div class="ai-container">
+                        <div class="ai-header">
+                            <div class="ai-avatar">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <div class="ai-title">
+                                <h3>AI 刷卡顧問</h3>
+                                <span class="status-dot"></span> 線上
+                            </div>
+                        </div>
+                        <div class="chat-history" id="chat-history">
+                            <div class="message bot">
+                                <p>您好！我是卡優比的 AI 顧問。告訴我您想買什麼（例如：「我要去日本買電器」或「今天要吃王品牛排」），我幫您推薦最划算的卡！</p>
+                            </div>
+                        </div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chat-input" placeholder="輸入消費情境...">
+                            <button id="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                        <div class="api-key-area">
+                            <input type="password" id="gemini-api-key" placeholder="貼上 Gemini API Key 以啟用">
+                        </div>
+                    </div>
+                </aside>
+            </div>
+            
+            <!-- 額外資訊欄 (可收合) -->
+            <section class="info-section collapsed" id="info-section">
+                <div class="info-header">
+                    <h2>卡片權益資訊</h2>
+                    <button class="info-toggle-btn" id="info-toggle-btn">
+                        <span class="toggle-text">展開更多</span>
+                        <i class="fa-solid fa-chevron-down toggle-icon"></i>
+                    </button>
+                </div>
+                <div class="info-grid" id="info-grid">
+                    <!-- 資訊卡 1 -->
+                    <div class="info-box">
+                        <span class="info-icon">🌍</span>
+                        <h3>全球旅遊禮遇</h3>
+                        <p>精選信用卡提供全球機場接送、飯店預訂折扣、以及海外消費高額回饋。</p>
+                        <a href="#" class="link">探索旅遊優惠</a>
+                    </div>
+                    <!-- 資訊卡 2 -->
+                    <div class="info-box">
+                        <span class="info-icon">🍽️</span>
+                        <h3>摘星餐廳優惠</h3>
+                        <p>持指定頂級卡，享有多家米其林星級餐廳兩人同行一人免費，或最高 8 折優惠。</p>
+                        <a href="#" class="link">查看餐飲禮遇</a>
+                    </div>
+                    <!-- 資訊卡 3 -->
+                    <div class="info-box">
+                        <span class="info-icon">✈️</span>
+                        <h3>航空尊爵待遇</h3>
+                        <p>無限次免費使用全球機場貴賓室、優先登機禮遇，以及哩程加速累積。</p>
+                        <a href="#" class="link">了解尊爵待遇</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>卡優比 CardUbi - 此頁為示範用前端，優惠內容皆為虛構範例。</p>
+            <p>AI 服務由 Google Gemini 提供技術支援</p>
+        </div>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

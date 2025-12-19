@@ -1,0 +1,59 @@
+{
+  "name": "bank-offers-comparison",
+  "version": "1.0.0",
+  "description": "AI-powered bank offers comparison website with modern UI and Firebase integration",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server . --port=3000",
+    "start": "live-server . --port=3000",
+    "test": "echo \"No tests specified\" && exit 0",
+    "format": "prettier --write \"**/*.{html,css,js,json,md}\"",
+    "lint": "eslint script.js || exit 0",
+    "build:css": "postcss style.css -o dist/style.min.css --env production",
+    "build:js": "terser script.js -o dist/script.min.js --compress --mangle",
+    "build": "npm run build:css && npm run build:js",
+    "deploy:netlify": "netlify deploy --prod",
+    "deploy:gh-pages": "gh-pages -d ."
+  },
+  "keywords": [
+    "bank",
+    "offers",
+    "comparison",
+    "ai",
+    "firebase",
+    "netlify",
+    "modern-ui",
+    "credit-cards"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/bank-offers-project.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/bank-offers-project/issues"
+  },
+  "homepage": "https://yourusername.github.io/bank-offers-project",
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "prettier": "^3.0.0",
+    "eslint": "^8.0.0",
+    "postcss": "^8.4.0",
+    "postcss-cli": "^10.0.0",
+    "autoprefixer": "^10.4.0",
+    "cssnano": "^6.0.0",
+    "terser": "^5.0.0",
+    "gh-pages": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
