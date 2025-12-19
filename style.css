@@ -3353,7 +3353,281 @@ body {
   outline-offset: 3px;
 }
 
-/* ===== 18. PREMIUM LOADING STATE ===== */
+/* ===== 20. LOGO TEXT REVEAL INTERACTION ===== */
+.logo-container {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-main {
+  position: relative;
+  z-index: 2;
+  transition: all 0.4s var(--ease-out-expo);
+}
+
+.logo-reveal-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+  opacity: 0;
+  transform: translateY(10px) scale(0.95);
+  transition: all 0.5s var(--ease-out-expo);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.logo-container:hover .logo-reveal-text {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.logo-container:hover .logo-main {
+  opacity: 0.3;
+  transform: translateY(-5px);
+}
+
+.reveal-char {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: transparent;
+  background: linear-gradient(
+    135deg,
+    #E8BDB5 0%,
+    #D4A69C 25%,
+    #C9A227 50%,
+    #E5B94E 75%,
+    #D4A69C 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 
+    0 2px 8px rgba(183, 110, 121, 0.3),
+    0 4px 16px rgba(201, 162, 39, 0.2);
+  opacity: 0;
+  transform: translateY(20px) rotateX(90deg);
+  transition: all 0.4s var(--ease-out-expo);
+  transition-delay: calc(var(--char-index) * 0.05s);
+}
+
+.logo-container:hover .reveal-char {
+  opacity: 1;
+  transform: translateY(0) rotateX(0deg);
+}
+
+/* Set individual delays for each character */
+.reveal-char:nth-child(1) { --char-index: 1; }
+.reveal-char:nth-child(2) { --char-index: 2; }
+.reveal-char:nth-child(3) { --char-index: 3; }
+.reveal-char:nth-child(4) { --char-index: 4; }
+.reveal-char:nth-child(5) { --char-index: 5; }
+.reveal-char:nth-child(6) { --char-index: 6; }
+.reveal-char:nth-child(7) { --char-index: 7; }
+.reveal-char:nth-child(8) { --char-index: 8; }
+
+/* ===== 21. MAGNETIC BUTTONS EFFECT ===== */
+.magnetic-btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s var(--ease-out-expo);
+}
+
+.magnetic-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(201, 162, 39, 0.15) 0%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  transition: width 0.4s var(--ease-out-expo), height 0.4s var(--ease-out-expo);
+  z-index: 0;
+}
+
+.magnetic-btn:hover::before {
+  width: 200%;
+  height: 200%;
+}
+
+.magnetic-btn .btn-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Apply magnetic effect to all major buttons */
+.subscribe-btn,
+.ad-btn,
+#send-btn,
+.filter-btn.active,
+.google-login-btn,
+.card-subscribe-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.subscribe-btn::before,
+.ad-btn::before,
+#send-btn::before,
+.filter-btn.active::before,
+.google-login-btn::before,
+.card-subscribe-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.3) 0%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  transition: width 0.4s var(--ease-out-expo), height 0.4s var(--ease-out-expo);
+  z-index: 0;
+}
+
+.subscribe-btn:hover::before,
+.ad-btn:hover::before,
+#send-btn:hover::before,
+.filter-btn.active:hover::before,
+.google-login-btn:hover::before,
+.card-subscribe-btn:hover::before {
+  width: 200%;
+  height: 200%;
+}
+
+.subscribe-btn > *,
+.ad-btn > *,
+#send-btn > *,
+.filter-btn.active > *,
+.google-login-btn > *,
+.card-subscribe-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== 22. HOLOGRAPHIC CARD VISUAL EFFECT ===== */
+.holographic-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.holographic-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transform: skewX(-15deg);
+  transition: left 0.7s var(--ease-out-expo);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.holographic-effect:hover::before {
+  left: 100%;
+}
+
+.holographic-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(58, 202, 202, 0.1) 0%,
+    rgba(42, 187, 187, 0.15) 25%,
+    rgba(183, 110, 121, 0.1) 50%,
+    rgba(201, 162, 39, 0.15) 75%,
+    rgba(58, 202, 202, 0.1) 100%
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Apply holographic effect to cards */
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(58, 202, 202, 0.05) 0%,
+    rgba(42, 187, 187, 0.08) 25%,
+    rgba(183, 110, 121, 0.05) 50%,
+    rgba(201, 162, 39, 0.08) 75%,
+    rgba(58, 202, 202, 0.05) 100%
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out-expo);
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: skewX(-15deg);
+  transition: left 0.7s var(--ease-out-expo);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.card:hover::before {
+  left: 100%;
+}
+
+/* ===== 23. PREMIUM LOADING STATE ===== */
 .loading {
   position: relative;
   overflow: hidden;

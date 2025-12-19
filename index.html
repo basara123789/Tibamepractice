@@ -13,7 +13,19 @@
         <div class="container">
             <div class="header-top">
                 <div class="logo-area">
-                    <h1>卡優比 <span class="highlight">AI</span></h1>
+                    <div class="logo-container">
+                        <h1 class="logo-main">卡優比 <span class="highlight">AI</span></h1>
+                        <div class="logo-reveal-text">
+                            <span class="reveal-char">較</span>
+                            <span class="reveal-char">Ka</span>
+                            <span class="reveal-char">-</span>
+                            <span class="reveal-char">優</span>
+                            <span class="reveal-char">U</span>
+                            <span class="reveal-char">-</span>
+                            <span class="reveal-char">惠</span>
+                            <span class="reveal-char">Bi</span>
+                        </div>
+                    </div>
                     <p class="subtitle header-hideable">CardUbi 您的專屬消費管家</p>
                 </div>
                 
@@ -96,43 +108,43 @@
             <div class="urgent-scroll-container">
                 <div class="urgent-cards" id="urgent-cards">
                     <div class="urgent-card">
+                        <div class="urgent-badge hot">最後 1 天</div>
+                        <div class="urgent-card-content">
+                            <span class="urgent-bank">國泰世華</span>
+                            <h4>CUBE 卡 週年慶最高 15%</h4>
+                            <p>新光三越/遠百/SOGO 指定專櫃</p>
+                        </div>
+                    </div>
+                    <div class="urgent-card">
                         <div class="urgent-badge">倒數 2 天</div>
                         <div class="urgent-card-content">
-                            <span class="urgent-bank">中信銀行</span>
-                            <h4>LINE Pay 卡 週末 8% 回饋</h4>
-                            <p>綁定支付滿 $500 享回饋</p>
+                            <span class="urgent-bank">玉山銀行</span>
+                            <h4>Only 卡 海外消費 5% 無上限</h4>
+                            <p>日本/韓國/歐美全通路適用</p>
                         </div>
                     </div>
                     <div class="urgent-card">
                         <div class="urgent-badge hot">即將截止</div>
                         <div class="urgent-card-content">
-                            <span class="urgent-bank">玉山銀行</span>
-                            <h4>Ubear 卡 外送平台 10%</h4>
-                            <p>foodpanda / Uber Eats 限定</p>
+                            <span class="urgent-bank">台新銀行</span>
+                            <h4>@GoGo 卡 網購 6% 回饋</h4>
+                            <p>蝦皮/momo/PChome 全站適用</p>
                         </div>
                     </div>
                     <div class="urgent-card">
                         <div class="urgent-badge">倒數 5 天</div>
                         <div class="urgent-card-content">
-                            <span class="urgent-bank">台新銀行</span>
-                            <h4>@GoGo 卡 日本 5% 加碼</h4>
-                            <p>日本消費再享額外回饋</p>
-                        </div>
-                    </div>
-                    <div class="urgent-card">
-                        <div class="urgent-badge hot">最後 1 天</div>
-                        <div class="urgent-card-content">
-                            <span class="urgent-bank">國泰世華</span>
-                            <h4>CUBE 卡 百貨週年慶 12%</h4>
-                            <p>指定百貨刷卡享高回饋</p>
+                            <span class="urgent-bank">中信銀行</span>
+                            <h4>LINE Pay 卡 週末餐飲 10%</h4>
+                            <p>全台餐廳/咖啡廳/速食店</p>
                         </div>
                     </div>
                     <div class="urgent-card">
                         <div class="urgent-badge">倒數 3 天</div>
                         <div class="urgent-card-content">
                             <span class="urgent-bank">永豐銀行</span>
-                            <h4>SPORT 卡 健身房 15%</h4>
-                            <p>World Gym / 健身工廠適用</p>
+                            <h4>DAWHO 卡 數位通路 8%</h4>
+                            <p>Netflix/Spotify/Apple Music</p>
                         </div>
                     </div>
                 </div>
@@ -177,21 +189,21 @@
                             </div>
                             <div class="comp-row">
                                 <div>新光三越</div>
-                                <div class="best-card">台新玫瑰卡</div>
-                                <div class="rate">10%</div>
-                                <div>滿額贈禮券</div>
+                                <div class="best-card">國泰 CUBE 卡</div>
+                                <div class="rate">最高 15%</div>
+                                <div>指定專櫃加碼</div>
                             </div>
                             <div class="comp-row">
                                 <div>SOGO</div>
-                                <div class="best-card">國泰 CUBE</div>
-                                <div class="rate">3%~12%</div>
-                                <div>切換權益</div>
+                                <div class="best-card">遠銀快樂購卡</div>
+                                <div class="rate">12%</div>
+                                <div>週末限定</div>
                             </div>
                             <div class="comp-row">
                                 <div>遠東大遠百</div>
-                                <div class="best-card">遠東樂家卡</div>
-                                <div class="rate">8%</div>
-                                <div>週末加碼</div>
+                                <div class="best-card">台新玫瑰卡</div>
+                                <div class="rate">10% + 禮券</div>
+                                <div>滿額贈禮券</div>
                             </div>
                         </div>
                     </section>
@@ -222,55 +234,56 @@
                     <!-- 優惠列表 -->
                     <div class="card-list" id="offer-list">
                         <!-- 卡片 1 -->
-                        <article class="card" data-bank="taishin" data-type="points" data-keywords="旅遊 日本">
+                        <article class="card" data-bank="taishin" data-type="cash" data-keywords="網購 數位">
                             <div class="card-header">
                                 <span class="card-bank">台新銀行</span>
                                 <!-- 這裡的按鈕是有功能的 -->
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
-                            <div class="card-title">@GoGo 卡日本旅遊 3.8%</div>
+                            <div class="card-title">@GoGo 卡 網購最高 6%</div>
                             <div class="card-body">
                                 <div class="card-meta">
-                                    <span class="badge travel">旅遊</span>
+                                    <span class="badge shopping">網購</span>
+                                    <span class="badge digital">數位</span>
                                     <span>期限：2025/12/31</span>
                                 </div>
-                                <button class="calendar-btn" onclick="addToCalendar('台新 @GoGo 日本旅遊優惠')">
+                                <button class="calendar-btn" onclick="addToCalendar('台新 @GoGo 網購優惠')">
                                     <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
                                 </button>
                             </div>
                         </article>
 
                         <!-- 卡片 2 -->
-                        <article class="card" data-bank="cathay" data-type="points" data-keywords="百貨 餐飲">
+                        <article class="card" data-bank="cathay" data-type="points" data-keywords="百貨 週年慶">
                             <div class="card-header">
                                 <span class="card-bank">國泰世華</span>
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
-                            <div class="card-title">CUBE 卡 樂饗購 3% 無上限</div>
+                            <div class="card-title">CUBE 卡 百貨週年慶 15%</div>
                             <div class="card-body">
                                 <div class="card-meta">
-                                    <span class="badge food">餐飲</span>
                                     <span class="badge shopping">百貨</span>
+                                    <span class="badge hot">週年慶</span>
                                 </div>
-                                <button class="calendar-btn" onclick="addToCalendar('CUBE 卡權益切換提醒')">
+                                <button class="calendar-btn" onclick="addToCalendar('CUBE 卡週年慶優惠')">
                                     <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
                                 </button>
                             </div>
                         </article>
                         
                         <!-- 卡片 3 -->
-                         <article class="card" data-bank="sinopac" data-type="cash" data-keywords="電影 運動">
+                         <article class="card" data-bank="sinopac" data-type="cash" data-keywords="數位 串流">
                             <div class="card-header">
                                 <span class="card-bank">永豐銀行</span>
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
-                            <div class="card-title">SPORT 卡 Apple Pay 7%</div>
+                            <div class="card-title">DAWHO 卡 數位通路 8%</div>
                             <div class="card-body">
                                 <div class="card-meta">
-                                    <span class="badge sport">運動</span>
-                                    <span class="badge movie">娛樂</span>
+                                    <span class="badge digital">數位</span>
+                                    <span class="badge entertainment">娛樂</span>
                                 </div>
-                                <button class="calendar-btn" onclick="addToCalendar('永豐 SPORT 汗水不白流')">
+                                <button class="calendar-btn" onclick="addToCalendar('永豐 DAWHO 數位優惠')">
                                     <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
                                 </button>
                             </div>
