@@ -178,24 +178,38 @@ html {
 body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", 
                "Helvetica Neue", "Noto Sans TC", sans-serif;
-  /* Flowing Pearlescent/Metallic Effect */
-  background: linear-gradient(
-    120deg,
-    #fdfbf7 0%,
-    #e8dcc5 25%,  /* Darker Champagne */
-    #ffffff 50%,  /* Pure White Highlight */
-    #e8dcc5 75%,  /* Darker Champagne */
-    #fdfbf7 100%
-  );
-  background-size: 400% 400%;
-  background-attachment: fixed;
-  animation: shimmerFlow 15s ease-in-out infinite;
+  /* Reset stacking context - gradient moved to .fluid-background-container */
+  background: transparent; /* Remove gradient from here */
+  position: relative;      /* Create stacking context base */
+  z-index: 0;             /* Ensure negative children stay visible within body */
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.6;
   letter-spacing: -0.01em;
-  position: relative;
   overflow-x: hidden;
+}
+
+/* ===== FLUID BACKGROUND CONTAINER - Animated Gradient Layer ===== */
+.fluid-background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2; /* Lowest layer */
+  
+  /* The Flowing Gradient */
+  background: linear-gradient(
+    120deg,
+    #fdfbf7 0%,
+    #e3d1b3 25%,  /* Rich Champagne */
+    #ffffff 50%,  /* Pure White Shine */
+    #e3d1b3 75%,  /* Rich Champagne */
+    #fdfbf7 100%
+  );
+  background-size: 400% 400%;
+  animation: shimmerFlow 15s ease-in-out infinite;
+  pointer-events: none;
 }
 
 /* ===== DECORATIVE BACKGROUND ELEMENTS - Metallic Texture ===== */
@@ -207,8 +221,8 @@ body::before {
   right: 0;
   bottom: 0;
   pointer-events: none;
-  z-index: -1;
-  opacity: 0.6;
+  z-index: -1;   /* Layer above the fluid background */
+  opacity: 0.3;  /* Reduced from 0.6 to make the flow visible */
   mix-blend-mode: multiply;
   /* Metallic light reflections */
   background: 
@@ -3743,5 +3757,13 @@ body {
 @keyframes shimmer {
   100% {
     left: 100%;
+  }
+}
+
+/* ===== PERFORMANCE GUARD - Reduced Motion Support ===== */
+@media (prefers-reduced-motion: reduce) {
+  .fluid-background-container {
+    animation: none;
+    background-position: 50% 50%; /* Static fallback */
   }
 }
