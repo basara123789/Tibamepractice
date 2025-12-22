@@ -182,14 +182,14 @@ body {
   background: linear-gradient(
     120deg,
     #fdfbf7 0%,
-    #f4e9d8 25%,
-    #ffffff 50%,
-    #f4e9d8 75%,
+    #e8dcc5 25%,  /* Darker Champagne */
+    #ffffff 50%,  /* Pure White Highlight */
+    #e8dcc5 75%,  /* Darker Champagne */
     #fdfbf7 100%
   );
   background-size: 400% 400%;
   background-attachment: fixed;
-  animation: shimmerFlow 18s ease-in-out infinite;
+  animation: shimmerFlow 15s ease-in-out infinite;
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.6;
@@ -208,6 +208,8 @@ body::before {
   bottom: 0;
   pointer-events: none;
   z-index: -1;
+  opacity: 0.6;
+  mix-blend-mode: multiply;
   /* Metallic light reflections */
   background: 
     /* Bright metallic highlight top-left */
@@ -234,6 +236,7 @@ body::after {
   bottom: 0;
   pointer-events: none;
   z-index: -1;
+  opacity: 0.4;
   background: 
     /* Brushed metal diagonal line 1 */
     linear-gradient(135deg, transparent 0%, transparent 48%, rgba(255, 255, 255, 0.15) 49%, rgba(200, 180, 160, 0.1) 50%, rgba(255, 255, 255, 0.15) 51%, transparent 52%, transparent 100%),
