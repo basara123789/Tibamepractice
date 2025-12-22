@@ -207,7 +207,7 @@ body::before {
   right: 0;
   bottom: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
   /* Metallic light reflections */
   background: 
     /* Bright metallic highlight top-left */
@@ -233,7 +233,7 @@ body::after {
   right: 0;
   bottom: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
   background: 
     /* Brushed metal diagonal line 1 */
     linear-gradient(135deg, transparent 0%, transparent 48%, rgba(255, 255, 255, 0.15) 49%, rgba(200, 180, 160, 0.1) 50%, rgba(255, 255, 255, 0.15) 51%, transparent 52%, transparent 100%),
