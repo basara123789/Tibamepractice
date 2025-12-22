@@ -165,22 +165,31 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Flowing Pearlescent/Metallic Animation */
+@keyframes shimmerFlow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", 
                "Helvetica Neue", "Noto Sans TC", sans-serif;
-  /* Metallic Rose Gold background - more gold/silver tones, less pink */
+  /* Flowing Pearlescent/Metallic Effect */
   background: linear-gradient(
-    145deg,
-    #E8E4E1 0%,
-    #DDD5D0 12%,
-    #D4C4BC 25%,
-    #E5D5CC 40%,
-    #EDE5E0 55%,
-    #D9CCC4 70%,
-    #E0D6D0 85%,
-    #EAE2DD 100%
+    120deg,
+    #fdfbf7 0%,
+    #f4e9d8 25%,
+    #ffffff 50%,
+    #f4e9d8 75%,
+    #fdfbf7 100%
   );
+  background-size: 400% 400%;
   background-attachment: fixed;
+  animation: shimmerFlow 18s ease-in-out infinite;
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.6;
