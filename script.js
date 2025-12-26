@@ -829,11 +829,34 @@ const firebaseConfig = {
           return selectedOffers;
       }
       
-      // 渲染優惠卡片
+      // 渲染優惠卡片 (始終顯示4張卡片)
       function renderOffers(offers) {
           urgentCardsContainer.innerHTML = '';
           
-          if (offers.length === 0) {
+          // 驗證卡片有效性：必須包含Bank、Offer Title、Hidden Note
+          const validOffers = offers.filter(offer => 
+              offer.bank && offer.bank.trim() && 
+              offer.offerTitle && offer.offerTitle.trim() && 
+              offer.hiddenNote && offer.hiddenNote.trim()
+          );
+          
+          // 始終顯示4張卡片，不足時添加占位符
+          const totalCards = 4;
+          const validCount = Math.min(validOffers.length, totalCards);
+          
+          // 渲染有效卡片
+          for (let i = 0; i < validCount; i++) {
+              const offer = validOffers[i];
+              createOfferCard(offer, i, false);
+          }
+          
+          // 添加占位符卡片
+          for (let i = validCount; i < totalCards; i++) {
+              createPlaceholderCard(i);
+          }
+          
+          // 如果沒有任何有效卡片，顯示訊息
+          if (validOffers.length === 0) {
               const message = document.createElement('div');
               message.className = 'vault-message';
               message.innerHTML = `
@@ -843,123 +866,204 @@ const firebaseConfig = {
                   </div>
               `;
               urgentCardsContainer.appendChild(message);
-              return;
+          }
+      }
+      
+      // 創建有效優惠卡片
+      function createOfferCard(offer, index, isPlaceholder = false) {
+          const card = document.createElement('div');
+          card.className = 'urgent-card vault-card locked';
+          card.dataset.index = index;
+          card.dataset.isPlaceholder = isPlaceholder;
+          card.tabIndex = 0; // 讓卡片可聚焦，支援鍵盤操作
+          
+          // 格式化結束日期
+          let formattedDate = offer.endDate;
+          try {
+              const date = new Date(offer.endDate);
+              if (!isNaN(date.getTime())) {
+                  formattedDate = date.toLocaleDateString('zh-TW', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                  });
+              }
+          } catch (e) {
+              // 保持原格式
           }
           
-          offers.forEach((offer, index) => {
-              const card = document.createElement('div');
-              card.className = 'urgent-card vault-card locked';
-              card.dataset.index = index;
-              card.tabIndex = 0; // 讓卡片可聚焦，支援鍵盤操作
-              
-              // 格式化結束日期
-              let formattedDate = offer.endDate;
-              try {
-                  const date = new Date(offer.endDate);
-                  if (!isNaN(date.getTime())) {
-                      formattedDate = date.toLocaleDateString('zh-TW', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                      });
-                  }
-              } catch (e) {
-                  // 保持原格式
-              }
-              
-              card.innerHTML = `
-                  <div class="vault-card-inner">
-                      <div class="vault-card-front">
-                          <div class="vault-card-header">
-                              <span class="exclusive-tag">全網獨家</span>
-                              <span class="lock-icon">🔒</span>
+          card.innerHTML = `
+              <div class="vault-card-inner">
+                  <div class="vault-card-front">
+                      <div class="vault-card-header">
+                          <span class="exclusive-tag">全網獨家</span>
+                          <span class="lock-icon">🔒</span>
+                      </div>
+                      <div class="vault-card-content">
+                          <div class="bank-logo-placeholder">
+                              <i class="fas fa-university"></i>
                           </div>
-                          <div class="vault-card-content">
-                              <div class="bank-logo-placeholder">
-                                  <i class="fas fa-university"></i>
-                              </div>
-                              <h4 class="vault-card-title">隱藏優惠</h4>
-                              <p class="vault-card-subtitle">點擊解鎖查看詳情</p>
-                              <div class="unlock-hint">
-                                  <span class="unlock-icon">🔓</span>
-                                  <span>點擊解鎖</span>
-                              </div>
-                          </div>
-                          <div class="vault-card-footer">
-                              <span class="bank-name">${offer.bank || '未知銀行'}</span>
+                          <h4 class="vault-card-title">隱藏優惠</h4>
+                          <p class="vault-card-subtitle">點擊解鎖查看詳情</p>
+                          <div class="unlock-hint">
+                              <span class="unlock-icon">🔓</span>
+                              <span>點擊解鎖</span>
                           </div>
                       </div>
-                      <div class="vault-card-back">
-                          <div class="vault-card-header">
-                              <span class="exclusive-tag">全網獨家</span>
-                              <span class="unlocked-icon">🔓</span>
-                          </div>
-                          <div class="vault-card-details">
-                              <h4 class="offer-title">${offer.offerTitle || '未命名優惠'}</h4>
-                              <div class="offer-meta">
-                                  <div class="meta-item">
-                                      <i class="fas fa-mobile-alt"></i>
-                                      <span>${offer.appName || '銀行App'}</span>
-                                  </div>
-                                  <div class="meta-item">
-                                      <i class="fas fa-calendar-alt"></i>
-                                      <span>${formattedDate}</span>
-                                  </div>
-                              </div>
-                              <div class="hidden-note">
-                                  <i class="fas fa-sticky-note"></i>
-                                  <p>${offer.hiddenNote || '無備註'}</p>
-                              </div>
-                          </div>
-                          <div class="vault-card-footer">
-                              <span class="bank-name">${offer.bank || '未知銀行'}</span>
-                              <button class="lock-again-btn" aria-label="重新鎖定">
-                                  <i class="fas fa-lock"></i>
-                              </button>
-                          </div>
+                      <div class="vault-card-footer">
+                          <span class="bank-name">${offer.bank || '未知銀行'}</span>
                       </div>
                   </div>
-                  <div class="vault-blur-overlay"></div>
-              `;
-              
-              urgentCardsContainer.appendChild(card);
-              
-              // 綁定點擊事件 (解鎖/鎖定)
-              const cardInner = card.querySelector('.vault-card-inner');
-              const lockAgainBtn = card.querySelector('.lock-again-btn');
-              
-              const unlockCard = () => {
-                  card.classList.remove('locked');
-                  card.classList.add('unlocked');
-                  card.setAttribute('aria-label', `已解鎖：${offer.offerTitle}`);
-              };
-              
-              const lockCard = () => {
-                  card.classList.remove('unlocked');
-                  card.classList.add('locked');
-                  card.setAttribute('aria-label', `已鎖定：${offer.bank}隱藏優惠`);
-              };
-              
-              // 點擊卡片解鎖
-              card.addEventListener('click', (e) => {
-                  if (e.target.closest('.lock-again-btn')) return; // 避免事件冒泡
+                  <div class="vault-card-back">
+                      <div class="vault-card-header">
+                          <span class="exclusive-tag">全網獨家</span>
+                          <span class="unlocked-icon">🔓</span>
+                      </div>
+                      <div class="vault-card-details">
+                          <h4 class="offer-title">${offer.offerTitle || '未命名優惠'}</h4>
+                          <div class="offer-meta">
+                              <div class="meta-item">
+                                  <i class="fas fa-mobile-alt"></i>
+                                  <span>${offer.appName || '銀行App'}</span>
+                              </div>
+                              <div class="meta-item">
+                                  <i class="fas fa-calendar-alt"></i>
+                                  <span>${formattedDate}</span>
+                              </div>
+                          </div>
+                          <div class="hidden-note">
+                              <i class="fas fa-sticky-note"></i>
+                              <p>${offer.hiddenNote || '無備註'}</p>
+                          </div>
+                      </div>
+                      <div class="vault-card-footer">
+                          <span class="bank-name">${offer.bank || '未知銀行'}</span>
+                          <button class="lock-again-btn" aria-label="重新鎖定">
+                              <i class="fas fa-lock"></i>
+                          </button>
+                      </div>
+                  </div>
+              </div>
+              <div class="vault-blur-overlay"></div>
+          `;
+          
+          urgentCardsContainer.appendChild(card);
+          
+          // 綁定點擊事件 (解鎖/鎖定)
+          const lockAgainBtn = card.querySelector('.lock-again-btn');
+          
+          const unlockCard = () => {
+              card.classList.remove('locked');
+              card.classList.add('unlocked');
+              card.setAttribute('aria-label', `已解鎖：${offer.offerTitle}`);
+          };
+          
+          const lockCard = () => {
+              card.classList.remove('unlocked');
+              card.classList.add('locked');
+              card.setAttribute('aria-label', `已鎖定：${offer.bank}隱藏優惠`);
+          };
+          
+          // 點擊卡片解鎖
+          card.addEventListener('click', (e) => {
+              if (e.target.closest('.lock-again-btn')) return; // 避免事件冒泡
+              unlockCard();
+          });
+          
+          // 按鍵盤 Enter/Space 解鎖
+          card.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
                   unlockCard();
+              }
+          });
+          
+          // 點擊鎖定按鈕重新鎖定
+          if (lockAgainBtn) {
+              lockAgainBtn.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                  lockCard();
               });
-              
-              // 按鍵盤 Enter/Space 解鎖
-              card.addEventListener('keydown', (e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      unlockCard();
-                  }
-              });
-              
-              // 點擊鎖定按鈕重新鎖定
-              if (lockAgainBtn) {
-                  lockAgainBtn.addEventListener('click', (e) => {
-                      e.stopPropagation();
-                      lockCard();
-                  });
+          }
+      }
+      
+      // 創建占位符卡片
+      function createPlaceholderCard(index) {
+          const card = document.createElement('div');
+          card.className = 'urgent-card vault-card placeholder locked';
+          card.dataset.index = index;
+          card.dataset.isPlaceholder = true;
+          card.tabIndex = 0;
+          
+          card.innerHTML = `
+              <div class="vault-card-inner">
+                  <div class="vault-card-front">
+                      <div class="vault-card-header">
+                          <span class="placeholder-tag">資料補貨中</span>
+                          <span class="lock-icon">🔒</span>
+                      </div>
+                      <div class="vault-card-content">
+                          <div class="bank-logo-placeholder placeholder">
+                              <i class="fas fa-clock"></i>
+                          </div>
+                          <h4 class="vault-card-title">即將上線</h4>
+                          <p class="vault-card-subtitle">人工蒐集中</p>
+                          <div class="unlock-hint">
+                              <span class="unlock-icon">⏳</span>
+                              <span>敬請期待</span>
+                          </div>
+                      </div>
+                      <div class="vault-card-footer">
+                          <span class="bank-name">銀行名稱</span>
+                      </div>
+                  </div>
+                  <div class="vault-card-back">
+                      <div class="vault-card-header">
+                          <span class="placeholder-tag">資料補貨中</span>
+                          <span class="unlocked-icon">🔒</span>
+                      </div>
+                      <div class="vault-card-details">
+                          <h4 class="offer-title">優惠標題</h4>
+                          <div class="offer-meta">
+                              <div class="meta-item">
+                                  <i class="fas fa-mobile-alt"></i>
+                                  <span>銀行App</span>
+                              </div>
+                              <div class="meta-item">
+                                  <i class="fas fa-calendar-alt"></i>
+                                  <span>結束日期</span>
+                              </div>
+                          </div>
+                          <div class="hidden-note">
+                              <i class="fas fa-sticky-note"></i>
+                              <p>隱藏備註</p>
+                          </div>
+                      </div>
+                      <div class="vault-card-footer">
+                          <span class="bank-name">銀行名稱</span>
+                          <button class="lock-again-btn" aria-label="重新鎖定" disabled>
+                              <i class="fas fa-lock"></i>
+                          </button>
+                      </div>
+                  </div>
+              </div>
+              <div class="vault-blur-overlay"></div>
+          `;
+          
+          urgentCardsContainer.appendChild(card);
+          
+          // 占位符卡片不可解鎖
+          card.addEventListener('click', (e) => {
+              e.preventDefault();
+              card.classList.add('placeholder-pulse');
+              setTimeout(() => card.classList.remove('placeholder-pulse'), 300);
+          });
+          
+          card.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  card.classList.add('placeholder-pulse');
+                  setTimeout(() => card.classList.remove('placeholder-pulse'), 300);
               }
           });
       }
@@ -1168,7 +1272,7 @@ const firebaseConfig = {
       const contentGrid = contentHub.querySelector('.content-grid');
       if (!contentGrid) return;
       
-      // 模擬 AI 每週內容數據
+      // 模擬 AI 每週內容數據 (僅3篇靜態文章)
       const aiWeeklyContent = [
           {
               id: 1,
@@ -1199,36 +1303,6 @@ const firebaseConfig = {
               date: "2025-12-24",
               imageColor: "#FF6B6B",
               icon: "fas fa-shopping-bag"
-          },
-          {
-              id: 4,
-              title: "海外消費信用卡比較報告",
-              excerpt: "針對不同國家消費習慣，AI 推薦最適合的海外消費信用卡組合。",
-              category: "海外消費",
-              readTime: "6 分鐘",
-              date: "2025-12-23",
-              imageColor: "#9B59B6",
-              icon: "fas fa-plane"
-          },
-          {
-              id: 5,
-              title: "數位銀行 vs 傳統銀行：用戶體驗大比拼",
-              excerpt: "我們實測了 12 家銀行的 App 體驗，發現數位銀行在介面設計上明顯領先。",
-              category: "用戶體驗",
-              readTime: "8 分鐘",
-              date: "2025-12-22",
-              imageColor: "#F39C12",
-              icon: "fas fa-university"
-          },
-          {
-              id: 6,
-              title: "2025 第一季信用卡權益預測",
-              excerpt: "基於歷史數據和市場趨勢，AI 預測下一季信用卡權益變化方向。",
-              category: "權益預測",
-              readTime: "5 分鐘",
-              date: "2025-12-21",
-              imageColor: "#1ABC9C",
-              icon: "fas fa-crystal-ball"
           }
       ];
       
