@@ -3979,11 +3979,11 @@ body {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.urgent-zone.insider-vault .urgent-card.revealed .card-details {
+.urgent-zone.insider-vault .urgent-card.unlocked .card-details {
   display: block;
 }
 
-.urgent-zone.insider-vault .urgent-card.revealed::after {
+.urgent-zone.insider-vault .urgent-card.unlocked::after {
   display: none;
 }
 

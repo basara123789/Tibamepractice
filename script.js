@@ -1142,8 +1142,8 @@ const firebaseConfig = {
       const calculatorZone = document.querySelector('.calculator-zone');
       if (!calculatorZone) return;
       
-      const amountSlider = document.getElementById('cashback-amount');
-      const amountValue = document.getElementById('amount-value');
+      const amountSlider = document.getElementById('cashback-slider');
+      const amountValue = document.getElementById('cashback-amount');
       const cashbackDisplay = document.getElementById('cashback-result');
       const rateDisplay = document.getElementById('cashback-rate');
       
@@ -1269,7 +1269,7 @@ const firebaseConfig = {
       const contentHub = document.querySelector('.content-hub');
       if (!contentHub) return;
       
-      const contentGrid = contentHub.querySelector('.content-grid');
+      const contentGrid = contentHub.querySelector('.content-grid-hub');
       if (!contentGrid) return;
       
       // 模擬 AI 每週內容數據 (僅3篇靜態文章)
