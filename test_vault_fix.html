@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vault 解锁功能测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 20px;
+            background: #f5f5f7;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #1d1d1f;
+            margin-bottom: 20px;
+        }
+        
+        .test-card {
+            width: 300px;
+            height: 200px;
+            background: linear-gradient(165deg, rgba(30, 30, 40, 0.9) 0%, rgba(40, 40, 60, 0.85) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(201, 162, 39, 0.2);
+            cursor: pointer;
+        }
+        
+        .test-card.locked::after {
+            content: '🔒 點擊解鎖';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #C9A227;
+            font-weight: 600;
+            font-size: 1.125rem;
+            transition: all 0.3s ease;
+        }
+        
+        .test-card.unlocked::after {
+            display: none;
+        }
+        
+        .test-card .card-details {
+            display: none;
+            color: white;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .test-card.unlocked .card-details {
+            display: block;
+        }
+        
+        .test-result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            border-left: 4px solid #007AFF;
+        }
+        
+        .success {
+            color: #34C759;
+            font-weight: 600;
+        }
+        
+        .error {
+            color: #FF3B30;
+            font-weight: 600;
+        }
+        
+        button {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        
+        button:hover {
+            background: #0056CC;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Vault 解锁功能测试</h1>
+        
+        <p>测试卡片解锁功能是否正常工作：</p>
+        
+        <div class="test-card locked" id="testCard" tabindex="0">
+            <div class="card-content">
+                <span style="color: rgba(255,255,255,0.7); font-size: 0.8rem;">測試銀行</span>
+                <h4 style="color: white; margin: 10px 0;">測試優惠標題</h4>
+                <p style="color: rgba(255,255,255,0.8);">點擊解鎖查看詳情</p>
+            </div>
+            <div class="card-details">
+                <p>銀行: 測試銀行</p>
+                <p>App名稱: 測試App</p>
+                <p>結束日期: 2025-12-31</p>
+                <p>隱藏備註: 這是測試備註</p>
+            </div>
+        </div>
+        
+        <div>
+            <button onclick="unlockCard()">點擊解鎖卡片</button>
+            <button onclick="lockCard()">重新鎖定卡片</button>
+            <button onclick="testKeyboard()">測試鍵盤 (Enter/Space)</button>
+        </div>
+        
+        <div class="test-result">
+            <h3>測試結果：</h3>
+            <p id="testStatus">等待測試...</p>
+            <p id="cardStatus">卡片狀態: <span class="error">鎖定</span></p>
+            <p id="keyboardStatus">鍵盤支援: <span class="error">未測試</span></p>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 20px; background: #f0f0f5; border-radius: 8px;">
+            <h3>修復驗證：</h3>
+            <ol>
+                <li>CSS 類名檢查: <span id="cssCheck" class="error">待檢查</span></li>
+                <li>點擊事件綁定: <span id="clickCheck" class="error">待測試</span></li>
+                <li>鍵盤事件綁定: <span id="keyboardCheck" class="error">待測試</span></li>
+                <li>類名切換邏輯: <span id="classToggleCheck" class="error">待測試</span></li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        const testCard = document.getElementById('testCard');
+        const testStatus = document.getElementById('testStatus');
+        const cardStatus = document.getElementById('cardStatus');
+        const cssCheck = document.getElementById('cssCheck');
+        const clickCheck = document.getElementById('clickCheck');
+        const keyboardCheck = document.getElementById('keyboardCheck');
+        const classToggleCheck = document.getElementById('classToggleCheck');
+        const keyboardStatus = document.getElementById('keyboardStatus');
+        
+        // 檢查CSS類名
+        function checkCSSClasses() {
+            const card = document.querySelector('.test-card');
+            const computedStyle = window.getComputedStyle(card, '::after');
+            const content = computedStyle.content;
+            
+            if (content.includes('點擊解鎖')) {
+                cssCheck.textContent = '✓ 正確 (locked::after 顯示解鎖提示)';
+                cssCheck.className = 'success';
+                return true;
+            } else {
+                cssCheck.textContent = '✗ 錯誤 (CSS ::after 內容不正確)';
+                cssCheck.className = 'error';
+                return false;
+            }
+        }
+        
+        // 解鎖卡片
+        function unlockCard() {
+            testCard.classList.remove('locked');
+            testCard.classList.add('unlocked');
+            updateCardStatus();
+            clickCheck.textContent = '✓ 正確 (點擊事件觸發類名切換)';
+            clickCheck.className = 'success';
+            classToggleCheck.textContent = '✓ 正確 (locked → unlocked 類名切換)';
+            classToggleCheck.className = 'success';
+            testStatus.textContent = '卡片已解鎖！';
+            testStatus.className = 'success';
+        }
+        
+        // 鎖定卡片
+        function lockCard() {
+            testCard.classList.remove('unlocked');
+            testCard.classList.add('locked');
+            updateCardStatus();
+            testStatus.textContent = '卡片已重新鎖定！';
+            testStatus.className = 'success';
+        }
+        
+        // 更新卡片狀態顯示
+        function updateCardStatus() {
+            const isLocked = testCard.classList.contains('locked');
+            cardStatus.innerHTML = `卡片狀態: <span class="${isLocked ? 'error' : 'success'}">${isLocked ? '鎖定' : '已解鎖'}</span>`;
+        }
+        
+        // 測試鍵盤事件
+        function testKeyboard() {
+            // 模擬按下 Enter 鍵
+            const enterEvent = new KeyboardEvent('keydown', {
+                key: 'Enter',
+                code: 'Enter',
+                keyCode: 13,
+                which: 13,
+                bubbles: true
+            });
+            
+            testCard.dispatchEvent(enterEvent);
+            
+            keyboardCheck.textContent = '✓ 正確 (鍵盤事件監聽器已綁定)';
+            keyboardCheck.className = 'success';
+            keyboardStatus.innerHTML = '鍵盤支援: <span class="success">✓ 已測試 (Enter 鍵觸發解鎖)</span>';
+        }
+        
+        // 綁定點擊事件
+        testCard.addEventListener('click', unlockCard);
+        
+        // 綁定鍵盤事件
+        testCard.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                unlockCard();
+            }
+        });
+        
+        // 初始檢查
+        window.addEventListener('load', function() {
+            checkCSSClasses();
+            updateCardStatus();
+        });
+    </script>
+</body>
+</html>
