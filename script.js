@@ -85,6 +85,15 @@ const firebaseConfig = {
       
       // 12. ⏰ 緊急優惠倒數計時
       setupUrgentCountdown();
+      
+      // 13. 🔒 Insider Vault 功能 (CSV 獲取 + 每日採樣 + 緩存)
+      setupInsiderVault();
+      
+      // 14. 🧮 Apple 風格現金回饋計算器
+      setupCashbackCalculator();
+      
+      // 15. 📰 AI 每週內容網格
+      setupContentHub();
   });
 
   // ===== 3D TILT EFFECT FOR CARDS (Desktop Only) =====
@@ -623,3 +632,706 @@ const firebaseConfig = {
       setInterval(updateCountdown, 1000);
   }
   
+  // ===== INSIDER VAULT (CSV 獲取 + 每日採樣 + 緩存) =====
+  function setupInsiderVault() {
+      const CSV_URL = "https://docs.google.com/spreadsheets/d/1Vnvpz_B6FOXSPQFZPp9yDULEDel1_50CQj1sH2uDJnI/export?format=csv";
+      const CACHE_KEY_PREFIX = "cardubi_vault_";
+      const urgentCardsContainer = document.getElementById('urgent-cards');
+      
+      if (!urgentCardsContainer) {
+          console.warn('找不到 #urgent-cards 容器');
+          return;
+      }
+      
+      // 更新倒數計時器文字為「今日精選」
+      const countdownEl = document.getElementById('urgent-countdown');
+      if (countdownEl) {
+          countdownEl.textContent = '今日精選';
+      }
+      
+      // 獲取今天的日期字串 (YYYY-MM-DD)
+      function getTodayKey() {
+          const now = new Date();
+          return CACHE_KEY_PREFIX + now.toISOString().split('T')[0];
+      }
+      
+      // 清理舊的緩存 (保留最近7天)
+      function cleanupOldCache() {
+          const today = new Date();
+          const sevenDaysAgo = new Date(today);
+          sevenDaysAgo.setDate(today.getDate() - 7);
+          
+          for (let i = 0; i < localStorage.length; i++) {
+              const key = localStorage.key(i);
+              if (key.startsWith(CACHE_KEY_PREFIX)) {
+                  const dateStr = key.replace(CACHE_KEY_PREFIX, '');
+                  const cacheDate = new Date(dateStr);
+                  if (cacheDate < sevenDaysAgo) {
+                      localStorage.removeItem(key);
+                  }
+              }
+          }
+      }
+      
+      // 解析 CSV 行 (處理逗號和引號)
+      function parseCSVRow(row) {
+          const result = [];
+          let current = '';
+          let inQuotes = false;
+          
+          for (let i = 0; i < row.length; i++) {
+              const char = row[i];
+              const nextChar = row[i + 1];
+              
+              if (char === '"') {
+                  if (inQuotes && nextChar === '"') {
+                      current += '"';
+                      i++; // 跳過下一個引號
+                  } else {
+                      inQuotes = !inQuotes;
+                  }
+              } else if (char === ',' && !inQuotes) {
+                  result.push(current.trim());
+                  current = '';
+              } else {
+                  current += char;
+              }
+          }
+          
+          result.push(current.trim());
+          return result;
+      }
+      
+      // 解析 CSV 數據
+      function parseCSVData(csvText) {
+          const lines = csvText.split('\n').filter(line => line.trim());
+          if (lines.length < 2) return [];
+          
+          // 嘗試檢測標題行 (支援中英文別名)
+          const headerLine = lines[0];
+          const headers = parseCSVRow(headerLine);
+          
+          // 建立欄位映射
+          const fieldMap = {
+              bank: headers.findIndex(h => 
+                  ['Bank', '銀行', 'bank', 'Bank Name', '銀行名稱'].includes(h.trim())
+              ),
+              appName: headers.findIndex(h => 
+                  ['App Name', 'App名稱', 'app name', '應用名稱'].includes(h.trim())
+              ),
+              offerTitle: headers.findIndex(h => 
+                  ['Offer Title', '優惠標題', 'offer title', 'Title', '標題'].includes(h.trim())
+              ),
+              endDate: headers.findIndex(h => 
+                  ['End Date', '結束日期', 'end date', '截止日期'].includes(h.trim())
+              ),
+              hiddenNote: headers.findIndex(h => 
+                  ['Hidden Note', '隱藏備註', 'hidden note', '備註'].includes(h.trim())
+              )
+          };
+          
+          // 解析數據行
+          const offers = [];
+          for (let i = 1; i < lines.length; i++) {
+              const row = parseCSVRow(lines[i]);
+              if (row.length < Math.max(...Object.values(fieldMap).filter(idx => idx !== -1))) {
+                  continue; // 跳過不完整的行
+              }
+              
+              const offer = {
+                  bank: fieldMap.bank !== -1 ? row[fieldMap.bank] : '',
+                  appName: fieldMap.appName !== -1 ? row[fieldMap.appName] : '',
+                  offerTitle: fieldMap.offerTitle !== -1 ? row[fieldMap.offerTitle] : '',
+                  endDate: fieldMap.endDate !== -1 ? row[fieldMap.endDate] : '',
+                  hiddenNote: fieldMap.hiddenNote !== -1 ? row[fieldMap.hiddenNote] : ''
+              };
+              
+              offers.push(offer);
+          }
+          
+          return offers;
+      }
+      
+      // 過濾已過期的優惠
+      function filterExpiredOffers(offers) {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          
+          return offers.filter(offer => {
+              if (!offer.endDate || offer.endDate.trim() === '') {
+                  return true; // 沒有結束日期，保留
+              }
+              
+              try {
+                  // 嘗試解析各種日期格式
+                  const dateStr = offer.endDate.trim();
+                  let endDate;
+                  
+                  // 嘗試 YYYY/MM/DD 格式
+                  if (dateStr.includes('/')) {
+                      const parts = dateStr.split('/');
+                      if (parts.length === 3) {
+                          endDate = new Date(parts[0], parts[1] - 1, parts[2]);
+                      }
+                  }
+                  
+                  // 嘗試 YYYY-MM-DD 格式
+                  if (!endDate && dateStr.includes('-')) {
+                      endDate = new Date(dateStr);
+                  }
+                  
+                  // 如果解析失敗，保留優惠 (fail-safe)
+                  if (!endDate || isNaN(endDate.getTime())) {
+                      return true;
+                  }
+                  
+                  endDate.setHours(23, 59, 59, 999);
+                  return endDate >= today;
+              } catch (error) {
+                  console.warn('日期解析失敗:', offer.endDate, error);
+                  return true; // 解析失敗時保留
+              }
+          });
+      }
+      
+      // 採樣邏輯：從最多4家不同銀行中各選1個優惠
+      function sampleOffers(offers) {
+          if (offers.length === 0) return [];
+          
+          // 按銀行分組
+          const bankGroups = {};
+          offers.forEach(offer => {
+              const bank = offer.bank.trim();
+              if (!bankGroups[bank]) {
+                  bankGroups[bank] = [];
+              }
+              bankGroups[bank].push(offer);
+          });
+          
+          // 獲取銀行列表並隨機排序
+          const banks = Object.keys(bankGroups);
+          const shuffledBanks = [...banks].sort(() => Math.random() - 0.5);
+          
+          // 從最多4家不同銀行中各選1個優惠
+          const selectedOffers = [];
+          const maxBanks = Math.min(4, shuffledBanks.length);
+          
+          for (let i = 0; i < maxBanks; i++) {
+              const bank = shuffledBanks[i];
+              const bankOffers = bankGroups[bank];
+              if (bankOffers && bankOffers.length > 0) {
+                  // 隨機選擇一個優惠
+                  const randomIndex = Math.floor(Math.random() * bankOffers.length);
+                  selectedOffers.push(bankOffers[randomIndex]);
+              }
+          }
+          
+          return selectedOffers;
+      }
+      
+      // 渲染優惠卡片
+      function renderOffers(offers) {
+          urgentCardsContainer.innerHTML = '';
+          
+          if (offers.length === 0) {
+              const message = document.createElement('div');
+              message.className = 'vault-message';
+              message.innerHTML = `
+                  <div class="vault-empty">
+                      <i class="fas fa-box-open"></i>
+                      <p>本週精選不足 4 家，持續補貨中</p>
+                  </div>
+              `;
+              urgentCardsContainer.appendChild(message);
+              return;
+          }
+          
+          offers.forEach((offer, index) => {
+              const card = document.createElement('div');
+              card.className = 'urgent-card vault-card locked';
+              card.dataset.index = index;
+              card.tabIndex = 0; // 讓卡片可聚焦，支援鍵盤操作
+              
+              // 格式化結束日期
+              let formattedDate = offer.endDate;
+              try {
+                  const date = new Date(offer.endDate);
+                  if (!isNaN(date.getTime())) {
+                      formattedDate = date.toLocaleDateString('zh-TW', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                      });
+                  }
+              } catch (e) {
+                  // 保持原格式
+              }
+              
+              card.innerHTML = `
+                  <div class="vault-card-inner">
+                      <div class="vault-card-front">
+                          <div class="vault-card-header">
+                              <span class="exclusive-tag">全網獨家</span>
+                              <span class="lock-icon">🔒</span>
+                          </div>
+                          <div class="vault-card-content">
+                              <div class="bank-logo-placeholder">
+                                  <i class="fas fa-university"></i>
+                              </div>
+                              <h4 class="vault-card-title">隱藏優惠</h4>
+                              <p class="vault-card-subtitle">點擊解鎖查看詳情</p>
+                              <div class="unlock-hint">
+                                  <span class="unlock-icon">🔓</span>
+                                  <span>點擊解鎖</span>
+                              </div>
+                          </div>
+                          <div class="vault-card-footer">
+                              <span class="bank-name">${offer.bank || '未知銀行'}</span>
+                          </div>
+                      </div>
+                      <div class="vault-card-back">
+                          <div class="vault-card-header">
+                              <span class="exclusive-tag">全網獨家</span>
+                              <span class="unlocked-icon">🔓</span>
+                          </div>
+                          <div class="vault-card-details">
+                              <h4 class="offer-title">${offer.offerTitle || '未命名優惠'}</h4>
+                              <div class="offer-meta">
+                                  <div class="meta-item">
+                                      <i class="fas fa-mobile-alt"></i>
+                                      <span>${offer.appName || '銀行App'}</span>
+                                  </div>
+                                  <div class="meta-item">
+                                      <i class="fas fa-calendar-alt"></i>
+                                      <span>${formattedDate}</span>
+                                  </div>
+                              </div>
+                              <div class="hidden-note">
+                                  <i class="fas fa-sticky-note"></i>
+                                  <p>${offer.hiddenNote || '無備註'}</p>
+                              </div>
+                          </div>
+                          <div class="vault-card-footer">
+                              <span class="bank-name">${offer.bank || '未知銀行'}</span>
+                              <button class="lock-again-btn" aria-label="重新鎖定">
+                                  <i class="fas fa-lock"></i>
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="vault-blur-overlay"></div>
+              `;
+              
+              urgentCardsContainer.appendChild(card);
+              
+              // 綁定點擊事件 (解鎖/鎖定)
+              const cardInner = card.querySelector('.vault-card-inner');
+              const lockAgainBtn = card.querySelector('.lock-again-btn');
+              
+              const unlockCard = () => {
+                  card.classList.remove('locked');
+                  card.classList.add('unlocked');
+                  card.setAttribute('aria-label', `已解鎖：${offer.offerTitle}`);
+              };
+              
+              const lockCard = () => {
+                  card.classList.remove('unlocked');
+                  card.classList.add('locked');
+                  card.setAttribute('aria-label', `已鎖定：${offer.bank}隱藏優惠`);
+              };
+              
+              // 點擊卡片解鎖
+              card.addEventListener('click', (e) => {
+                  if (e.target.closest('.lock-again-btn')) return; // 避免事件冒泡
+                  unlockCard();
+              });
+              
+              // 按鍵盤 Enter/Space 解鎖
+              card.addEventListener('keydown', (e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      unlockCard();
+                  }
+              });
+              
+              // 點擊鎖定按鈕重新鎖定
+              if (lockAgainBtn) {
+                  lockAgainBtn.addEventListener('click', (e) => {
+                      e.stopPropagation();
+                      lockCard();
+                  });
+              }
+          });
+      }
+      
+      // 主執行函數
+      async function executeVaultLogic() {
+          cleanupOldCache();
+          
+          const todayKey = getTodayKey();
+          const cachedData = localStorage.getItem(todayKey);
+          
+          if (cachedData) {
+              // 使用緩存的選擇
+              try {
+                  const cachedOffers = JSON.parse(cachedData);
+                  console.log('使用緩存的 Insider Vault 選擇');
+                  renderOffers(cachedOffers);
+                  return;
+              } catch (e) {
+                  console.warn('緩存解析失敗，重新獲取數據', e);
+              }
+          }
+          
+          // 沒有緩存或緩存無效，重新獲取數據
+          try {
+              console.log('獲取 CSV 數據...');
+              const response = await fetch(CSV_URL);
+              
+              if (!response.ok) {
+                  throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+              }
+              
+              const csvText = await response.text();
+              const allOffers = parseCSVData(csvText);
+              
+              if (allOffers.length === 0) {
+                  throw new Error('CSV 數據為空或解析失敗');
+              }
+              
+              console.log(`成功解析 ${allOffers.length} 個優惠`);
+              
+              // 過濾和採樣
+              const validOffers = filterExpiredOffers(allOffers);
+              console.log(`過濾後剩餘 ${validOffers.length} 個有效優惠`);
+              
+              const sampledOffers = sampleOffers(validOffers);
+              console.log(`採樣選擇 ${sampledOffers.length} 個優惠`);
+              
+              // 緩存今天的選擇
+              localStorage.setItem(todayKey, JSON.stringify(sampledOffers));
+              
+              // 渲染卡片
+              renderOffers(sampledOffers);
+              
+          } catch (error) {
+              console.error('Insider Vault 錯誤:', error);
+              
+              // 顯示錯誤訊息
+              urgentCardsContainer.innerHTML = `
+                  <div class="vault-error">
+                      <i class="fas fa-exclamation-triangle"></i>
+                      <p>暫時無法載入精選優惠</p>
+                      <p class="error-detail">${error.message}</p>
+                      <button class="retry-btn" onclick="setupInsiderVault()">重試</button>
+                  </div>
+              `;
+          }
+      }
+      
+      // 初始化
+      executeVaultLogic();
+  }
+  
+  // ===== APPLE 風格現金回饋計算器 =====
+  function setupCashbackCalculator() {
+      const calculatorZone = document.querySelector('.calculator-zone');
+      if (!calculatorZone) return;
+      
+      const amountSlider = document.getElementById('cashback-amount');
+      const amountValue = document.getElementById('amount-value');
+      const cashbackDisplay = document.getElementById('cashback-result');
+      const rateDisplay = document.getElementById('cashback-rate');
+      
+      if (!amountSlider || !amountValue || !cashbackDisplay || !rateDisplay) {
+          console.warn('計算器元素未找到');
+          return;
+      }
+      
+      const FIXED_RATE = 3.5; // 固定利率 3.5%
+      const MAX_AMOUNT = 100000; // 最大金額 100,000 TWD
+      
+      // 更新利率顯示
+      rateDisplay.textContent = `${FIXED_RATE}%`;
+      
+      // 平滑計數動畫函數
+      function animateValue(element, start, end, duration = 800) {
+          if (start === end) return;
+          
+          const range = end - start;
+          const startTime = performance.now();
+          const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+          
+          function update(currentTime) {
+              const elapsed = currentTime - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              const eased = easeOutQuart(progress);
+              const current = Math.floor(start + range * eased);
+              
+              element.textContent = current.toLocaleString('zh-TW');
+              
+              if (progress < 1) {
+                  requestAnimationFrame(update);
+              }
+          }
+          
+          requestAnimationFrame(update);
+      }
+      
+      // 計算現金回饋
+      function calculateCashback(amount) {
+          return Math.floor(amount * (FIXED_RATE / 100));
+      }
+      
+      // 更新顯示
+      function updateDisplay(amount) {
+          // 更新金額顯示
+          amountValue.textContent = amount.toLocaleString('zh-TW');
+          
+          // 計算現金回饋
+          const cashback = calculateCashback(amount);
+          
+          // 動畫更新現金回饋顯示
+          const currentCashback = parseInt(cashbackDisplay.textContent.replace(/,/g, '') || 0);
+          animateValue(cashbackDisplay, currentCashback, cashback);
+          
+          // 更新滑桿背景 (視覺回饋)
+          const percentage = (amount / MAX_AMOUNT) * 100;
+          amountSlider.style.background = `
+              linear-gradient(to right, 
+                  #007AFF 0%, 
+                  #007AFF ${percentage}%, 
+                  rgba(255, 255, 255, 0.1) ${percentage}%, 
+                  rgba(255, 255, 255, 0.1) 100%
+              )
+          `;
+      }
+      
+      // 初始化
+      const initialAmount = parseInt(amountSlider.value) || 50000;
+      updateDisplay(initialAmount);
+      
+      // 滑桿輸入事件
+      amountSlider.addEventListener('input', (e) => {
+          const amount = parseInt(e.target.value);
+          updateDisplay(amount);
+      });
+      
+      // 鍵盤導航支援
+      amountSlider.addEventListener('keydown', (e) => {
+          let step = 1000;
+          
+          switch(e.key) {
+              case 'ArrowUp':
+              case 'ArrowRight':
+                  e.preventDefault();
+                  amountSlider.value = Math.min(parseInt(amountSlider.value) + step, MAX_AMOUNT);
+                  updateDisplay(parseInt(amountSlider.value));
+                  break;
+                  
+              case 'ArrowDown':
+              case 'ArrowLeft':
+                  e.preventDefault();
+                  amountSlider.value = Math.max(parseInt(amountSlider.value) - step, 0);
+                  updateDisplay(parseInt(amountSlider.value));
+                  break;
+                  
+              case 'Home':
+                  e.preventDefault();
+                  amountSlider.value = 0;
+                  updateDisplay(0);
+                  break;
+                  
+              case 'End':
+                  e.preventDefault();
+                  amountSlider.value = MAX_AMOUNT;
+                  updateDisplay(MAX_AMOUNT);
+                  break;
+          }
+      });
+      
+      // 觸控裝置優化
+      amountSlider.addEventListener('touchstart', () => {
+          amountSlider.style.cursor = 'grabbing';
+      });
+      
+      amountSlider.addEventListener('touchend', () => {
+          amountSlider.style.cursor = 'grab';
+      });
+  }
+  
+  // ===== AI 每週內容網格 =====
+  function setupContentHub() {
+      const contentHub = document.querySelector('.content-hub');
+      if (!contentHub) return;
+      
+      const contentGrid = contentHub.querySelector('.content-grid');
+      if (!contentGrid) return;
+      
+      // 模擬 AI 每週內容數據
+      const aiWeeklyContent = [
+          {
+              id: 1,
+              title: "2025 信用卡現金回饋趨勢分析",
+              excerpt: "AI 深度分析顯示，數位銀行將主導未來現金回饋市場，傳統銀行需加速轉型。",
+              category: "趨勢分析",
+              readTime: "5 分鐘",
+              date: "2025-12-26",
+              imageColor: "#4A90E2",
+              icon: "fas fa-chart-line"
+          },
+          {
+              id: 2,
+              title: "隱藏版優惠：銀行 App 獨家活動解密",
+              excerpt: "我們發現超過 60% 的高回饋優惠僅在銀行 App 內顯示，外部網站完全搜尋不到。",
+              category: "獨家調查",
+              readTime: "7 分鐘",
+              date: "2025-12-25",
+              imageColor: "#50C878",
+              icon: "fas fa-mobile-alt"
+          },
+          {
+              id: 3,
+              title: "週末消費攻略：最高 10% 回饋組合",
+              excerpt: "本週末精選消費組合，透過特定支付方式疊加優惠，最高可達 10% 現金回饋。",
+              category: "消費攻略",
+              readTime: "4 分鐘",
+              date: "2025-12-24",
+              imageColor: "#FF6B6B",
+              icon: "fas fa-shopping-bag"
+          },
+          {
+              id: 4,
+              title: "海外消費信用卡比較報告",
+              excerpt: "針對不同國家消費習慣，AI 推薦最適合的海外消費信用卡組合。",
+              category: "海外消費",
+              readTime: "6 分鐘",
+              date: "2025-12-23",
+              imageColor: "#9B59B6",
+              icon: "fas fa-plane"
+          },
+          {
+              id: 5,
+              title: "數位銀行 vs 傳統銀行：用戶體驗大比拼",
+              excerpt: "我們實測了 12 家銀行的 App 體驗，發現數位銀行在介面設計上明顯領先。",
+              category: "用戶體驗",
+              readTime: "8 分鐘",
+              date: "2025-12-22",
+              imageColor: "#F39C12",
+              icon: "fas fa-university"
+          },
+          {
+              id: 6,
+              title: "2025 第一季信用卡權益預測",
+              excerpt: "基於歷史數據和市場趨勢，AI 預測下一季信用卡權益變化方向。",
+              category: "權益預測",
+              readTime: "5 分鐘",
+              date: "2025-12-21",
+              imageColor: "#1ABC9C",
+              icon: "fas fa-crystal-ball"
+          }
+      ];
+      
+      // 渲染內容卡片
+      function renderContentCards() {
+          contentGrid.innerHTML = '';
+          
+          aiWeeklyContent.forEach(item => {
+              const card = document.createElement('article');
+              card.className = 'content-card';
+              card.tabIndex = 0;
+              card.setAttribute('aria-label', `${item.title} - ${item.category}`);
+              
+              // 格式化日期
+              const formattedDate = new Date(item.date).toLocaleDateString('zh-TW', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+              });
+              
+              card.innerHTML = `
+                  <div class="content-card-image" style="background-color: ${item.imageColor}">
+                      <i class="${item.icon}"></i>
+                  </div>
+                  <div class="content-card-content">
+                      <div class="content-card-header">
+                          <span class="content-category">${item.category}</span>
+                          <span class="content-read-time">
+                              <i class="far fa-clock"></i>
+                              ${item.readTime}
+                          </span>
+                      </div>
+                      <h3 class="content-title">${item.title}</h3>
+                      <p class="content-excerpt">${item.excerpt}</p>
+                      <div class="content-card-footer">
+                          <span class="content-date">
+                              <i class="far fa-calendar"></i>
+                              ${formattedDate}
+                          </span>
+                          <button class="content-read-btn" aria-label="閱讀全文：${item.title}">
+                              閱讀全文
+                              <i class="fas fa-arrow-right"></i>
+                          </button>
+                      </div>
+                  </div>
+              `;
+              
+              contentGrid.appendChild(card);
+              
+              // 綁定點擊事件
+              const readBtn = card.querySelector('.content-read-btn');
+              readBtn.addEventListener('click', () => {
+                  alert(`即將開啟「${item.title}」的詳細內容`);
+                  // 實際應用中這裡會導向文章頁面
+              });
+              
+              // 鍵盤支援
+              card.addEventListener('keydown', (e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      readBtn.click();
+                  }
+              });
+          });
+      }
+      
+      // 響應式網格調整
+      function updateGridColumns() {
+          const width = window.innerWidth;
+          let columns = 1;
+          
+          if (width >= 1024) {
+              columns = 3;
+          } else if (width >= 768) {
+              columns = 2;
+          }
+          
+          contentGrid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+      }
+      
+      // 初始化
+      renderContentCards();
+      updateGridColumns();
+      
+      // 監聽視窗大小變化
+      window.addEventListener('resize', updateGridColumns);
+      
+      // 添加滾動動畫
+      const observerOptions = {
+          root: null,
+          rootMargin: '0px',
+          threshold: 0.1
+      };
+      
+      const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                  entry.target.classList.add('visible');
+              }
+          });
+      }, observerOptions);
+      
+      document.querySelectorAll('.content-card').forEach(card => {
+          observer.observe(card);
+      });
+  }
