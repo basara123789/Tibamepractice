@@ -3899,34 +3899,9 @@ body {
   z-index: 1;
 }
 
-.urgent-zone.insider-vault .urgent-card.locked {
+.urgent-zone.insider-vault .urgent-card {
+  /* 移除锁定状态，所有卡片立即显示内容 */
   position: relative;
-}
-
-.urgent-zone.insider-vault .urgent-card.locked::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(10, 10, 15, 0.85);
-  backdrop-filter: blur(8px);
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--gold-300);
-  font-weight: 600;
-  font-size: 1.125rem;
-  content: '🔒 點擊解鎖';
-  cursor: pointer;
-  transition: all 0.3s var(--ease-out-expo);
-}
-
-.urgent-zone.insider-vault .urgent-card.locked:hover::after {
-  background: rgba(10, 10, 15, 0.7);
-  color: var(--gold-200);
 }
 
 .urgent-zone.insider-vault .urgent-card .urgent-badge {
@@ -3979,12 +3954,11 @@ body {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.urgent-zone.insider-vault .urgent-card.unlocked .card-details {
+.urgent-zone.insider-vault .urgent-card .card-details {
   display: block;
-}
-
-.urgent-zone.insider-vault .urgent-card.unlocked::after {
-  display: none;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Vault Message */

@@ -869,62 +869,56 @@ const firebaseConfig = {
           }
       }
       
-      // 創建有效優惠卡片
+      // 創建有效優惠卡片 (簡化版：直接顯示所有內容，無鎖定/解鎖)
       function createOfferCard(offer, index, isPlaceholder = false) {
           const card = document.createElement('div');
-          card.className = 'urgent-card vault-card locked';
+          card.className = 'urgent-card vault-card';
           card.dataset.index = index;
           card.dataset.isPlaceholder = isPlaceholder;
           card.tabIndex = 0; // 讓卡片可聚焦，支援鍵盤操作
           
           // 格式化結束日期
-          let formattedDate = offer.endDate;
+          let formattedDate = offer.endDate || '未標示期限';
           try {
-              const date = new Date(offer.endDate);
-              if (!isNaN(date.getTime())) {
-                  formattedDate = date.toLocaleDateString('zh-TW', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                  });
+              if (offer.endDate && offer.endDate.trim()) {
+                  const date = new Date(offer.endDate);
+                  if (!isNaN(date.getTime())) {
+                      formattedDate = date.toLocaleDateString('zh-TW', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                      });
+                  }
               }
           } catch (e) {
               // 保持原格式
           }
           
+          // 使用後備值
+          const bankName = offer.bank || '未知銀行';
+          const offerTitle = offer.offerTitle || '未命名優惠';
+          const appName = offer.appName || '銀行App';
+          const hiddenNote = offer.hiddenNote || '詳情請見 App 內活動頁';
+          
           card.innerHTML = `
               <div class="vault-card-inner">
-                  <div class="vault-card-front">
+                  <div class="vault-card-content">
                       <div class="vault-card-header">
                           <span class="exclusive-tag">全網獨家</span>
-                          <span class="lock-icon">🔒</span>
                       </div>
-                      <div class="vault-card-content">
+                      <div class="vault-card-main">
                           <div class="bank-logo-placeholder">
                               <i class="fas fa-university"></i>
                           </div>
-                          <h4 class="vault-card-title">隱藏優惠</h4>
-                          <p class="vault-card-subtitle">點擊解鎖查看詳情</p>
-                          <div class="unlock-hint">
-                              <span class="unlock-icon">🔓</span>
-                              <span>點擊解鎖</span>
-                          </div>
-                      </div>
-                      <div class="vault-card-footer">
-                          <span class="bank-name">${offer.bank || '未知銀行'}</span>
-                      </div>
-                  </div>
-                  <div class="vault-card-back">
-                      <div class="vault-card-header">
-                          <span class="exclusive-tag">全網獨家</span>
-                          <span class="unlocked-icon">🔓</span>
-                      </div>
-                      <div class="vault-card-details">
-                          <h4 class="offer-title">${offer.offerTitle || '未命名優惠'}</h4>
+                          <h4 class="offer-title">${offerTitle}</h4>
                           <div class="offer-meta">
                               <div class="meta-item">
+                                  <i class="fas fa-university"></i>
+                                  <span>${bankName}</span>
+                              </div>
+                              <div class="meta-item">
                                   <i class="fas fa-mobile-alt"></i>
-                                  <span>${offer.appName || '銀行App'}</span>
+                                  <span>${appName}</span>
                               </div>
                               <div class="meta-item">
                                   <i class="fas fa-calendar-alt"></i>
@@ -933,139 +927,65 @@ const firebaseConfig = {
                           </div>
                           <div class="hidden-note">
                               <i class="fas fa-sticky-note"></i>
-                              <p>${offer.hiddenNote || '無備註'}</p>
+                              <p>${hiddenNote}</p>
                           </div>
                       </div>
                       <div class="vault-card-footer">
-                          <span class="bank-name">${offer.bank || '未知銀行'}</span>
-                          <button class="lock-again-btn" aria-label="重新鎖定">
-                              <i class="fas fa-lock"></i>
-                          </button>
+                          <span class="bank-name">${bankName}</span>
                       </div>
                   </div>
               </div>
-              <div class="vault-blur-overlay"></div>
           `;
           
           urgentCardsContainer.appendChild(card);
-          
-          // 綁定點擊事件 (解鎖/鎖定)
-          const lockAgainBtn = card.querySelector('.lock-again-btn');
-          
-          const unlockCard = () => {
-              card.classList.remove('locked');
-              card.classList.add('unlocked');
-              card.setAttribute('aria-label', `已解鎖：${offer.offerTitle}`);
-          };
-          
-          const lockCard = () => {
-              card.classList.remove('unlocked');
-              card.classList.add('locked');
-              card.setAttribute('aria-label', `已鎖定：${offer.bank}隱藏優惠`);
-          };
-          
-          // 點擊卡片解鎖
-          card.addEventListener('click', (e) => {
-              if (e.target.closest('.lock-again-btn')) return; // 避免事件冒泡
-              unlockCard();
-          });
-          
-          // 按鍵盤 Enter/Space 解鎖
-          card.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  unlockCard();
-              }
-          });
-          
-          // 點擊鎖定按鈕重新鎖定
-          if (lockAgainBtn) {
-              lockAgainBtn.addEventListener('click', (e) => {
-                  e.stopPropagation();
-                  lockCard();
-              });
-          }
       }
       
-      // 創建占位符卡片
+      // 創建占位符卡片 (簡化版)
       function createPlaceholderCard(index) {
           const card = document.createElement('div');
-          card.className = 'urgent-card vault-card placeholder locked';
+          card.className = 'urgent-card vault-card placeholder';
           card.dataset.index = index;
           card.dataset.isPlaceholder = true;
           card.tabIndex = 0;
           
           card.innerHTML = `
               <div class="vault-card-inner">
-                  <div class="vault-card-front">
+                  <div class="vault-card-content">
                       <div class="vault-card-header">
                           <span class="placeholder-tag">資料補貨中</span>
-                          <span class="lock-icon">🔒</span>
                       </div>
-                      <div class="vault-card-content">
+                      <div class="vault-card-main">
                           <div class="bank-logo-placeholder placeholder">
                               <i class="fas fa-clock"></i>
                           </div>
-                          <h4 class="vault-card-title">即將上線</h4>
-                          <p class="vault-card-subtitle">人工蒐集中</p>
-                          <div class="unlock-hint">
-                              <span class="unlock-icon">⏳</span>
-                              <span>敬請期待</span>
-                          </div>
-                      </div>
-                      <div class="vault-card-footer">
-                          <span class="bank-name">銀行名稱</span>
-                      </div>
-                  </div>
-                  <div class="vault-card-back">
-                      <div class="vault-card-header">
-                          <span class="placeholder-tag">資料補貨中</span>
-                          <span class="unlocked-icon">🔒</span>
-                      </div>
-                      <div class="vault-card-details">
-                          <h4 class="offer-title">優惠標題</h4>
+                          <h4 class="offer-title">即將上線</h4>
                           <div class="offer-meta">
+                              <div class="meta-item">
+                                  <i class="fas fa-university"></i>
+                                  <span>銀行名稱</span>
+                              </div>
                               <div class="meta-item">
                                   <i class="fas fa-mobile-alt"></i>
                                   <span>銀行App</span>
                               </div>
                               <div class="meta-item">
                                   <i class="fas fa-calendar-alt"></i>
-                                  <span>結束日期</span>
+                                  <span>未標示期限</span>
                               </div>
                           </div>
                           <div class="hidden-note">
                               <i class="fas fa-sticky-note"></i>
-                              <p>隱藏備註</p>
+                              <p>詳情請見 App 內活動頁</p>
                           </div>
                       </div>
                       <div class="vault-card-footer">
                           <span class="bank-name">銀行名稱</span>
-                          <button class="lock-again-btn" aria-label="重新鎖定" disabled>
-                              <i class="fas fa-lock"></i>
-                          </button>
                       </div>
                   </div>
               </div>
-              <div class="vault-blur-overlay"></div>
           `;
           
           urgentCardsContainer.appendChild(card);
-          
-          // 占位符卡片不可解鎖
-          card.addEventListener('click', (e) => {
-              e.preventDefault();
-              card.classList.add('placeholder-pulse');
-              setTimeout(() => card.classList.remove('placeholder-pulse'), 300);
-          });
-          
-          card.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  card.classList.add('placeholder-pulse');
-                  setTimeout(() => card.classList.remove('placeholder-pulse'), 300);
-              }
-          });
       }
       
       // 主執行函數
@@ -1145,9 +1065,8 @@ const firebaseConfig = {
       const amountSlider = document.getElementById('cashback-slider');
       const amountValue = document.getElementById('cashback-amount');
       const cashbackDisplay = document.getElementById('cashback-result');
-      const rateDisplay = document.getElementById('cashback-rate');
       
-      if (!amountSlider || !amountValue || !cashbackDisplay || !rateDisplay) {
+      if (!amountSlider || !amountValue || !cashbackDisplay) {
           console.warn('計算器元素未找到');
           return;
       }
@@ -1155,49 +1074,19 @@ const firebaseConfig = {
       const FIXED_RATE = 3.5; // 固定利率 3.5%
       const MAX_AMOUNT = 100000; // 最大金額 100,000 TWD
       
-      // 更新利率顯示
-      rateDisplay.textContent = `${FIXED_RATE}%`;
-      
-      // 平滑計數動畫函數
-      function animateValue(element, start, end, duration = 800) {
-          if (start === end) return;
-          
-          const range = end - start;
-          const startTime = performance.now();
-          const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
-          
-          function update(currentTime) {
-              const elapsed = currentTime - startTime;
-              const progress = Math.min(elapsed / duration, 1);
-              const eased = easeOutQuart(progress);
-              const current = Math.floor(start + range * eased);
-              
-              element.textContent = current.toLocaleString('zh-TW');
-              
-              if (progress < 1) {
-                  requestAnimationFrame(update);
-              }
-          }
-          
-          requestAnimationFrame(update);
-      }
-      
       // 計算現金回饋
       function calculateCashback(amount) {
           return Math.floor(amount * (FIXED_RATE / 100));
       }
       
-      // 更新顯示
+      // 更新顯示 (即時更新，無動畫延遲)
       function updateDisplay(amount) {
-          // 更新金額顯示
+          // 更新消費金額顯示 (即時)
           amountValue.textContent = amount.toLocaleString('zh-TW');
           
-          // 計算現金回饋
+          // 計算現金回饋 (即時)
           const cashback = calculateCashback(amount);
-          
-          // 動畫更新現金回饋顯示
-          const currentCashback = parseInt(cashbackDisplay.textContent.replace(/,/g, '') || 0);
-          animateValue(cashbackDisplay, currentCashback, cashback);
+          cashbackDisplay.textContent = cashback.toLocaleString('zh-TW');
           
           // 更新滑桿背景 (視覺回饋)
           const percentage = (amount / MAX_AMOUNT) * 100;
@@ -1215,8 +1104,14 @@ const firebaseConfig = {
       const initialAmount = parseInt(amountSlider.value) || 50000;
       updateDisplay(initialAmount);
       
-      // 滑桿輸入事件
+      // 滑桿輸入事件 (即時更新)
       amountSlider.addEventListener('input', (e) => {
+          const amount = parseInt(e.target.value);
+          updateDisplay(amount);
+      });
+      
+      // 滑桿變更事件 (確保拖曳結束時也更新)
+      amountSlider.addEventListener('change', (e) => {
           const amount = parseInt(e.target.value);
           updateDisplay(amount);
       });

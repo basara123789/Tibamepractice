@@ -115,46 +115,7 @@
             </div>
             <div class="urgent-scroll-container">
                 <div class="urgent-cards" id="urgent-cards">
-                    <div class="urgent-card">
-                        <div class="urgent-badge hot">最後 1 天</div>
-                        <div class="urgent-card-content">
-                            <span class="urgent-bank">國泰世華</span>
-                            <h4>CUBE 卡 週年慶最高 15%</h4>
-                            <p>新光三越/遠百/SOGO 指定專櫃</p>
-                        </div>
-                    </div>
-                    <div class="urgent-card">
-                        <div class="urgent-badge">倒數 2 天</div>
-                        <div class="urgent-card-content">
-                            <span class="urgent-bank">玉山銀行</span>
-                            <h4>Only 卡 海外消費 5% 無上限</h4>
-                            <p>日本/韓國/歐美全通路適用</p>
-                        </div>
-                    </div>
-                    <div class="urgent-card">
-                        <div class="urgent-badge hot">即將截止</div>
-                        <div class="urgent-card-content">
-                            <span class="urgent-bank">台新銀行</span>
-                            <h4>@GoGo 卡 網購 6% 回饋</h4>
-                            <p>蝦皮/momo/PChome 全站適用</p>
-                        </div>
-                    </div>
-                    <div class="urgent-card">
-                        <div class="urgent-badge">倒數 5 天</div>
-                        <div class="urgent-card-content">
-                            <span class="urgent-bank">中信銀行</span>
-                            <h4>LINE Pay 卡 週末餐飲 10%</h4>
-                            <p>全台餐廳/咖啡廳/速食店</p>
-                        </div>
-                    </div>
-                    <div class="urgent-card">
-                        <div class="urgent-badge">倒數 3 天</div>
-                        <div class="urgent-card-content">
-                            <span class="urgent-bank">永豐銀行</span>
-                            <h4>DAWHO 卡 數位通路 8%</h4>
-                            <p>Netflix/Spotify/Apple Music</p>
-                        </div>
-                    </div>
+                    <!-- Vault cards will be dynamically loaded by JavaScript -->
                 </div>
             </div>
         </div>
@@ -185,10 +146,17 @@
                     <span class="tag-pulse">Smart Rate 3.5%</span>
                 </div>
                 <div class="calculator-container">
+                    <!-- Apple-style layout with clear hierarchy -->
                     <div class="calculator-input-group">
-                        <label for="cashback-slider">消費金額 (TWD)</label>
+                        <div class="input-label">消費金額 (TWD)</div>
+                        <div class="big-number-display">
+                            <span id="cashback-amount">50,000</span>
+                            <span class="currency">TWD</span>
+                        </div>
+                        
+                        <!-- Premium larger slider -->
                         <div class="slider-container">
-                            <input type="range" id="cashback-slider" min="0" max="100000" step="1000" value="50000">
+                            <input type="range" id="cashback-slider" class="premium-slider" min="0" max="100000" step="1000" value="50000">
                             <div class="slider-labels">
                                 <span>0</span>
                                 <span>25,000</span>
@@ -197,15 +165,16 @@
                                 <span>100,000</span>
                             </div>
                         </div>
-                        <div class="amount-display">
-                            <span id="cashback-amount">50,000</span>
-                            <span class="currency">TWD</span>
-                        </div>
                     </div>
+                    
+                    <div class="calculator-divider"></div>
+                    
                     <div class="calculator-result">
                         <div class="result-label">預估現金回饋</div>
-                        <div class="result-amount" id="cashback-result">1,750</div>
-                        <div class="result-currency">TWD</div>
+                        <div class="big-number-display">
+                            <span id="cashback-result">1,750</span>
+                            <span class="currency">TWD</span>
+                        </div>
                         <div class="result-note">基於 Smart Rate 3.5% 計算</div>
                     </div>
                 </div>
