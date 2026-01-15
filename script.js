@@ -844,7 +844,6 @@ function setupInsiderVault() {
         } else {
             validOffers[3] = taishinCard;
         }
-
         // 始終顯示4張卡片，如果有效卡片不足，重複顯示現有卡片
         const totalCards = 4;
 
