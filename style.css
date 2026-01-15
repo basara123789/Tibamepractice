@@ -1021,7 +1021,7 @@ button:active,
 
 .urgent-card {
   flex-shrink: 0;
-  width: 260px;
+  width: 280px;
   background: linear-gradient(165deg,
       rgba(255, 255, 255, 0.95) 0%,
       rgba(255, 255, 255, 0.88) 100%);
@@ -1034,6 +1034,10 @@ button:active,
     0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s var(--ease-out-expo);
   cursor: pointer;
+  word-break: normal;
+  /* Prevent aggressive breaking */
+  overflow-wrap: break-word;
+  /* wrapping long words if needed */
 }
 
 .urgent-card:hover {
