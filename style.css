@@ -1112,6 +1112,108 @@ button:active,
   line-height: 1.5;
 }
 
+/* New Vault Card Layout */
+.vault-card-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 8px;
+  /* Spacing between rows */
+}
+
+.vault-row {
+  display: flex;
+  align-items: center;
+}
+
+/* Row 1: Bank Name */
+.vault-row-bank .bank-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+/* Row 2: Card Name */
+.vault-row-card {
+  margin-top: 4px;
+}
+
+.vault-row-card .card-label {
+  font-size: 1.5rem;
+  /* Large and clear */
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+/* Visual Divider */
+.vault-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  /* Subtle divider */
+  margin: 8px 0;
+  width: 100%;
+}
+
+/* Row 3: Offer Content */
+.vault-row-content {
+  flex-grow: 1;
+  /* Pushes footer down */
+}
+
+.vault-row-content .content-label {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Footer: Date */
+.vault-card-footer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.08);
+}
+
+.vault-date {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+/* Dark Mode Overrides (for Insider Vault) */
+.urgent-zone.insider-vault .urgent-card .bank-label {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.urgent-zone.insider-vault .urgent-card .card-label {
+  background: linear-gradient(135deg, #F5D6D0 0%, #E8BDB5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: #E8BDB5;
+}
+
+.urgent-zone.insider-vault .urgent-card .vault-divider {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.urgent-zone.insider-vault .urgent-card .content-label {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.urgent-zone.insider-vault .urgent-card .vault-card-footer {
+  border-top-color: rgba(255, 255, 255, 0.15);
+}
+
+.urgent-zone.insider-vault .urgent-card .vault-date {
+  color: rgba(255, 255, 255, 0.5);
+}
+
 /* ===== 6. BENTO GRID LAYOUT ===== */
 .content-grid {
   display: grid;
