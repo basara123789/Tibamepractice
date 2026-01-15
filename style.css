@@ -1021,12 +1021,12 @@ button:active,
 
 .urgent-card {
   flex-shrink: 0;
-  width: 280px;
+  width: 320px;
   background: linear-gradient(165deg,
       rgba(255, 255, 255, 0.95) 0%,
       rgba(255, 255, 255, 0.88) 100%);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: 24px;
   position: relative;
   overflow: hidden;
   box-shadow:
@@ -1035,9 +1035,8 @@ button:active,
   transition: all 0.3s var(--ease-out-expo);
   cursor: pointer;
   word-break: normal;
-  /* Prevent aggressive breaking */
-  overflow-wrap: break-word;
-  /* wrapping long words if needed */
+  overflow-wrap: anywhere;
+  /* Ensure long numbers/urls break if needed */
 }
 
 .urgent-card:hover {
@@ -1084,7 +1083,8 @@ button:active,
 }
 
 .urgent-card-content {
-  padding-right: 60px;
+  padding-right: 0;
+  /* Removed padding to give more space */
 }
 
 .urgent-bank {
@@ -1098,17 +1098,18 @@ button:active,
 }
 
 .urgent-card h4 {
-  font-size: 1rem;
+  font-size: 0.95rem;
+  /* Reduced from 1rem */
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 6px;
-  line-height: 1.3;
+  line-height: 1.4;
 }
 
 .urgent-card p {
   font-size: 0.8125rem;
   color: var(--text-secondary);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 /* ===== 6. BENTO GRID LAYOUT ===== */
