@@ -43,13 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startLiveTicker('miles-ticker', 5000, 100000);
     startLiveTicker('cashback-ticker', 100, 5000);
 
-    // 3. 搜尋功能
-    const searchInput = document.getElementById('global-search');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            filterCards(e.target.value.toLowerCase());
-        });
-    }
+
 
     // 4. 篩選按鈕
     setupFilters();
@@ -78,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupScrollShrink();
 
     // 10. 📋 Info Section 展開/收合
-    setupInfoToggle();
+    // setupInfoToggle();
 
     // 11. 🔐 Firebase Auth 會員系統
     setupFirebaseAuth();
@@ -395,13 +389,7 @@ function startLiveTicker(elementId, min, max) {
     }, 3000);
 }
 
-function filterCards(searchTerm) {
-    document.querySelectorAll('.card').forEach(card => {
-        const keywords = card.dataset.keywords ? card.dataset.keywords.toLowerCase() : "";
-        const title = card.querySelector('.card-title').textContent.toLowerCase();
-        card.style.display = (keywords.includes(searchTerm) || title.includes(searchTerm)) ? 'block' : 'none';
-    });
-}
+
 
 function setupFilters() {
     const apply = () => {
@@ -475,7 +463,8 @@ async function handleCardSubscribe(e) {
     finally { btn.disabled = false; }
 }
 
-window.addToCalendar = (name) => alert(`✅ 已將「${name}」加入行事曆！`);
+// window.addToCalendar = (name) => alert(`✅ 已將「${name}」加入行事曆！`);
+window.handleCardApply = (name) => alert(`即將導向「${name}」申辦網頁 (此為示範，不會真的跳轉)`);
 
 // ===== SCROLL-TO-SHRINK HEADER =====
 function setupScrollShrink() {
@@ -839,6 +828,22 @@ function setupInsiderVault() {
             offer.offerTitle && offer.offerTitle.trim() &&
             offer.hiddenNote && offer.hiddenNote.trim()
         );
+
+        // [MODIFIED] Force the 4th card (index 3) to be distinct to avoid duplicates
+        const taishinCard = {
+            bank: '台新銀行',
+            appName: 'GoGo 卡',
+            offerTitle: '指定行動支付最高 3.8%!',
+            endDate: '2025/12/31',
+            hiddenNote: '需使用 Richart 帳戶扣款'
+        };
+
+        // If we have less than 4 cards, push this one. If 4 or more, replace index 3.
+        if (validOffers.length < 4) {
+            validOffers.push(taishinCard);
+        } else {
+            validOffers[3] = taishinCard;
+        }
 
         // 始終顯示4張卡片，如果有效卡片不足，重複顯示現有卡片
         const totalCards = 4;

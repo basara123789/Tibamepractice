@@ -97,10 +97,7 @@
             </div>
 
             <!-- 搜尋欄位 -->
-            <div class="search-bar-container">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" id="global-search" placeholder="搜尋優惠：輸入「日本」、「威秀」、「百貨」...">
-            </div>
+
         </div>
     </header>
 
@@ -179,38 +176,9 @@
                     </section>
 
                     <!-- 百貨優惠整合 -->
-                    <section class="dept-store-section">
-                        <div class="section-header">
-                            <h2><i class="fa-solid fa-shop"></i> 百貨檔期神卡 PK</h2>
-                            <span class="tag-pulse">週年慶熱戰中</span>
-                        </div>
-                        <div class="comparison-table">
-                            <div class="comp-header">
-                                <div>通路</div>
-                                <div>首選神卡</div>
-                                <div>回饋率</div>
-                                <div>備註</div>
-                            </div>
-                            <div class="comp-row">
-                                <div>新光三越</div>
-                                <div class="best-card">國泰 CUBE 卡</div>
-                                <div class="rate">最高 15%</div>
-                                <div>指定專櫃加碼</div>
-                            </div>
-                            <div class="comp-row">
-                                <div>SOGO</div>
-                                <div class="best-card">遠銀快樂購卡</div>
-                                <div class="rate">12%</div>
-                                <div>週末限定</div>
-                            </div>
-                            <div class="comp-row">
-                                <div>遠東大遠百</div>
-                                <div class="best-card">台新玫瑰卡</div>
-                                <div class="rate">10% + 禮券</div>
-                                <div>滿額贈禮券</div>
-                            </div>
-                        </div>
-                    </section>
+
+
+
 
                     <!-- 雙層篩選系統 -->
                     <section class="filter-controls">
@@ -244,18 +212,17 @@
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
                             <div class="card-image-container">
-                                <img src="https://placehold.co/600x360/ffedee/d32f2f/?text=Fubon+J+Card" alt="富邦 J 卡示意圖"
-                                    class="card-image">
+                                <img src="images/fubon-j.jpg" alt="富邦 J 卡示意圖" class="card-image">
                             </div>
                             <div class="card-title">富邦 J 卡 日本消費最高 5%</div>
                             <div class="card-body">
                                 <div class="card-meta">
                                     <span class="badge travel">旅遊</span>
                                     <span class="badge shopping">海外</span>
-                                    <span>期限：2025/12/31</span>
+                                    <span>期限：2026/2/28</span>
                                 </div>
-                                <button class="calendar-btn" onclick="addToCalendar('富邦 J 卡日本消費優惠')">
-                                    <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
+                                <button class="calendar-btn" onclick="handleCardApply('富邦 J 卡')">
+                                    <i class="fa-solid fa-paper-plane"></i> 我要申請
                                 </button>
                             </div>
                         </article>
@@ -267,8 +234,7 @@
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
                             <div class="card-image-container">
-                                <img src="https://placehold.co/600x360/e8f5e9/2e7d32/?text=DBS+eco+Card"
-                                    alt="星展 eco 永續卡示意圖" class="card-image">
+                                <img src="images/dbs-eco.jpg" alt="星展 eco 永續卡示意圖" class="card-image">
                             </div>
                             <div class="card-title">星展 eco 永續卡 綠色消費 3%</div>
                             <div class="card-body">
@@ -276,8 +242,8 @@
                                     <span class="badge shopping">環保</span>
                                     <span class="badge digital">永續</span>
                                 </div>
-                                <button class="calendar-btn" onclick="addToCalendar('星展 eco 永續卡綠色消費優惠')">
-                                    <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
+                                <button class="calendar-btn" onclick="handleCardApply('星展 eco 永續卡')">
+                                    <i class="fa-solid fa-paper-plane"></i> 我要申請
                                 </button>
                             </div>
                         </article>
@@ -289,8 +255,7 @@
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
                             <div class="card-image-container">
-                                <img src="https://placehold.co/600x360/ffebee/c62828/?text=Union+Jihe+Card"
-                                    alt="聯邦吉鶴卡示意圖" class="card-image">
+                                <img src="images/federal-jihe.jpg" alt="聯邦吉鶴卡示意圖" class="card-image">
                             </div>
                             <div class="card-title">聯邦吉鶴卡 日本消費最高 10%</div>
                             <div class="card-body">
@@ -298,8 +263,8 @@
                                     <span class="badge travel">旅遊</span>
                                     <span class="badge food">餐飲</span>
                                 </div>
-                                <button class="calendar-btn" onclick="addToCalendar('聯邦吉鶴卡日本消費優惠')">
-                                    <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
+                                <button class="calendar-btn" onclick="handleCardApply('聯邦吉鶴卡')">
+                                    <i class="fa-solid fa-paper-plane"></i> 我要申請
                                 </button>
                             </div>
                         </article>
@@ -311,8 +276,7 @@
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
                             <div class="card-image-container">
-                                <img src="https://placehold.co/600x360/212121/ffffff/?text=HSBC+Live%2B"
-                                    alt="滙豐 Live+ 卡示意圖" class="card-image">
+                                <img src="images/hsbc-live.jpg" alt="滙豐 Live+ 卡示意圖" class="card-image">
                             </div>
                             <div class="card-title">滙豐 Live+ 卡 影音娛樂 8%</div>
                             <div class="card-body">
@@ -320,8 +284,8 @@
                                     <span class="badge entertainment">娛樂</span>
                                     <span class="badge digital">串流</span>
                                 </div>
-                                <button class="calendar-btn" onclick="addToCalendar('滙豐 Live+ 卡影音娛樂優惠')">
-                                    <i class="fa-regular fa-calendar-plus"></i> 加入行事曆
+                                <button class="calendar-btn" onclick="handleCardApply('滙豐 Live+ 卡')">
+                                    <i class="fa-solid fa-paper-plane"></i> 我要申請
                                 </button>
                             </div>
                         </article>
@@ -367,38 +331,39 @@
                 </div>
             </section>
 
-            <!-- 額外資訊欄 (可收合) -->
-            <section class="info-section collapsed" id="info-section">
+            <!-- 理財達人分享 (原 Info Section) -->
+            <section class="info-section" id="info-section">
                 <div class="info-header">
-                    <h2>卡片權益資訊</h2>
-                    <button class="info-toggle-btn" id="info-toggle-btn">
-                        <span class="toggle-text">展開更多</span>
-                        <i class="fa-solid fa-chevron-down toggle-icon"></i>
-                    </button>
+                    <h2><i class="fa-brands fa-instagram"></i> 理財達人分享</h2>
                 </div>
+                <!-- 復用 info-grid 3欄位 CSS Grid，移除 collapsed 邏輯，保留 info-box 3D特效 -->
                 <div class="info-grid" id="info-grid">
-                    <!-- 資訊卡 1 -->
-                    <div class="info-box">
-                        <span class="info-icon">🌍</span>
-                        <h3>全球旅遊禮遇</h3>
-                        <p>精選信用卡提供全球機場接送、飯店預訂折扣、以及海外消費高額回饋。</p>
-                        <a href="#" class="link">探索旅遊優惠</a>
+                    <!-- 貼文 1 -->
+                    <div class="info-box ig-box">
+                        <blockquote class="instagram-media" data-instgrm-captioned
+                            data-instgrm-permalink="https://www.instagram.com/p/DTg9nAyE__N/?utm_source=ig_embed&amp;utm_campaign=loading"
+                            data-instgrm-version="14"
+                            style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                        </blockquote>
                     </div>
-                    <!-- 資訊卡 2 -->
-                    <div class="info-box">
-                        <span class="info-icon">🍽️</span>
-                        <h3>摘星餐廳優惠</h3>
-                        <p>持指定頂級卡，享有多家米其林星級餐廳兩人同行一人免費，或最高 8 折優惠。</p>
-                        <a href="#" class="link">查看餐飲禮遇</a>
+                    <!-- 貼文 2 -->
+                    <div class="info-box ig-box">
+                        <blockquote class="instagram-media" data-instgrm-captioned
+                            data-instgrm-permalink="https://www.instagram.com/reel/DTe_-i0kxmZ/?utm_source=ig_embed&amp;utm_campaign=loading"
+                            data-instgrm-version="14"
+                            style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                        </blockquote>
                     </div>
-                    <!-- 資訊卡 3 -->
-                    <div class="info-box">
-                        <span class="info-icon">✈️</span>
-                        <h3>航空尊爵待遇</h3>
-                        <p>無限次免費使用全球機場貴賓室、優先登機禮遇，以及哩程加速累積。</p>
-                        <a href="#" class="link">了解尊爵待遇</a>
+                    <!-- 貼文 3 -->
+                    <div class="info-box ig-box">
+                        <blockquote class="instagram-media" data-instgrm-captioned
+                            data-instgrm-permalink="https://www.instagram.com/p/DTe_VVCkyBe/?utm_source=ig_embed&amp;utm_campaign=loading"
+                            data-instgrm-version="14"
+                            style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                        </blockquote>
                     </div>
                 </div>
+                <script async src="//www.instagram.com/embed.js"></script>
             </section>
         </div>
     </main>
