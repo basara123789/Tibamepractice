@@ -838,13 +838,31 @@ function setupInsiderVault() {
             hiddenNote: '需使用 Richart 帳戶扣款'
         };
 
-        // If we have less than 4 cards, push this one. If 4 or more, replace index 3.
+        const federalCard = {
+            bank: '聯邦銀行',
+            appName: '吉鶴卡',
+            offerTitle: '日本消費最高 4% 回饋',
+            endDate: '2025/12/31',
+            hiddenNote: '綁定 Apple Pay 加碼'
+        };
+
+        // Ensure we have 4 distinct cards
         if (validOffers.length < 4) {
-            validOffers.push(taishinCard);
-        } else {
-            validOffers[3] = taishinCard;
+            // Add Taishin if not present (simple check)
+            if (!validOffers.some(o => o.appName.includes('GoGo'))) {
+                validOffers.push(taishinCard);
+            }
+            // Add Federal if still < 4
+            if (validOffers.length < 4 && !validOffers.some(o => o.appName.includes('吉鶴'))) {
+                validOffers.push(federalCard);
+            }
         }
-        // 始終顯示4張卡片，如果有效卡片不足，重複顯示現有卡片
+
+        // Ensure index 3 is Taishin if we have enough cards (user preference from before?)
+        // Or just let natural order flow if we have 4 unique ones.
+        // Let's just ensure we rely on the list we built.
+
+        // 始終顯示4張卡片
         const totalCards = 4;
 
         if (validOffers.length === 0) {
@@ -861,7 +879,7 @@ function setupInsiderVault() {
             return;
         }
 
-        // 渲染卡片，如果有效卡片不足4張，循環使用現有卡片
+        // 渲染卡片
         for (let i = 0; i < totalCards; i++) {
             const offerIndex = i % validOffers.length;
             const offer = validOffers[offerIndex];
@@ -869,47 +887,33 @@ function setupInsiderVault() {
         }
     }
 
-    // 創建有效優惠卡片 (簡化版：直接顯示所有內容，無鎖定/解鎖)
+    // 創建有效優惠卡片
     function createOfferCard(offer, index, isPlaceholder = false) {
         const card = document.createElement('div');
         card.className = 'urgent-card vault-card';
         card.dataset.index = index;
         card.dataset.isPlaceholder = isPlaceholder;
-        card.tabIndex = 0; // 讓卡片可聚焦，支援鍵盤操作
-
-        // 格式化結束日期
-        let formattedDate = offer.endDate || '未標示期限';
-        try {
-            if (offer.endDate && offer.endDate.trim()) {
-                const date = new Date(offer.endDate);
-                if (!isNaN(date.getTime())) {
-                    formattedDate = date.toLocaleDateString('zh-TW', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
-                }
-            }
-        } catch (e) {
-            // 保持原格式
-        }
+        card.tabIndex = 0;
 
         // 使用後備值
         const bankName = offer.bank || '未知銀行';
         const offerTitle = offer.offerTitle || '未命名優惠';
         const appName = offer.appName || '銀行App';
-        const hiddenNote = offer.hiddenNote || '詳情請見 App 內活動頁';
 
         card.innerHTML = `
               <div class="vault-card-inner">
-                  <div class="vault-card-content" style="text-align: left; padding: 24px; display: flex; flex-direction: column; height: 100%; justify-content: flex-start;">
-                      <div class="vault-card-header" style="margin-bottom: 2px;">
-                          <div class="bank-name" style="font-size: 0.9rem; margin-bottom: 2px; opacity: 0.8; font-weight: 500;">${bankName}</div>
-                          <div class="card-name" style="font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; line-height: 1.2;">${appName}</div>
-                      </div>
-                      <div class="vault-card-main" style="flex-grow: 1;">
-                          <p class="offer-title" style="font-size: 1rem; line-height: 1.5; margin: 0; font-weight: 400; opacity: 0.9;">${offerTitle}</p>
-                      </div>
+                  <div class="vault-row vault-row-bank">
+                      <span class="bank-label">${bankName}</span>
+                  </div>
+                  <div class="vault-row vault-row-card">
+                      <span class="card-label">${appName}</span>
+                  </div>
+                  <div class="vault-divider"></div>
+                  <div class="vault-row vault-row-content">
+                      <p class="content-label">${offerTitle}</p>
+                  </div>
+                  <div class="vault-card-footer">
+                       <span class="vault-date">${offer.endDate ? '期限: ' + offer.endDate : '限時優惠'}</span>
                   </div>
               </div>
           `;
