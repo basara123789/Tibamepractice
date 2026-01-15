@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8" />
     <title>卡優比 CardUbi - 您的智慧刷卡顧問</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Favicon using SVG Data URI with Credit Card emoji -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💳</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💳</text></svg>">
     <link rel="stylesheet" href="style.css" />
     <!-- 引入 Font Awesome 用於圖示 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <div class="fluid-background-container" aria-hidden="true"></div>
-    
+
     <header>
         <div class="container">
             <div class="header-top">
@@ -32,7 +35,7 @@
                     </div>
                     <p class="subtitle header-hideable">CardUbi 您的專屬消費管家</p>
                 </div>
-                
+
                 <div class="header-stats-group header-hideable">
                     <!-- 即時跳動儀表板 (裝飾用) -->
                     <div class="live-stats-container">
@@ -88,7 +91,7 @@
 
             <!-- 訂閱按鈕 -->
             <div class="subscribe-area header-hideable" style="margin-top: 1rem; text-align: right;">
-                 <button id="subscribe-btn" class="subscribe-btn">
+                <button id="subscribe-btn" class="subscribe-btn">
                     ⭐ 訂閱這個平台
                 </button>
             </div>
@@ -111,7 +114,7 @@
             </div>
             <div class="vault-subtitle">
                 <p>精選4 家銀行 App 內限定隱藏優惠</p>
-                <p class="scarcity-disclosure">由人工登入銀行 App 蒐集（外部網站搜尋不到）</p>
+                <p class="scarcity-disclosure">登入銀行 App 才能看到（外部網站搜尋不到）</p>
             </div>
             <div class="urgent-scroll-container">
                 <div class="urgent-cards" id="urgent-cards">
@@ -123,7 +126,7 @@
 
     <main>
         <div class="container">
-            
+
             <!-- 廣告 Banner -->
             <div class="ad-banner">
                 <span class="ad-watermark">廣告 banner</span>
@@ -134,56 +137,47 @@
                     <a href="https://www.tibame.com/" target="_blank" class="ad-btn">立即試聽</a>
                 </div>
                 <div class="ad-logo">
-                    <img src="https://www.tibame.com/static/img/tibame-logo.svg" alt="TibaMe Logo" onerror="this.parentElement.innerHTML='<span class=\'ad-logo-text\'><span class=\'ad-logo-zh\'>緯育</span> <span class=\'ad-logo-en\'>TibaMe</span></span>'">
+                    <img src="https://www.tibame.com/static/img/tibame-logo.svg" alt="TibaMe Logo"
+                        onerror="this.parentElement.innerHTML='<span class=\'ad-logo-text\'><span class=\'ad-logo-zh\'>緯育</span> <span class=\'ad-logo-en\'>TibaMe</span></span>'">
                 </div>
                 <div class="ad-bg-effect"></div>
             </div>
 
-            <!-- Apple-Style 現金回饋計算器 -->
-            <section class="calculator-zone">
-                <div class="section-header">
-                    <h2><i class="fa-solid fa-calculator"></i> 現金回饋計算器</h2>
-                    <span class="tag-pulse">Smart Rate 3.5%</span>
-                </div>
-                <div class="calculator-container">
-                    <!-- Apple-style layout with clear hierarchy -->
-                    <div class="calculator-input-group">
-                        <div class="input-label">消費金額 (TWD)</div>
-                        <div class="big-number-display">
-                            <span id="cashback-amount">50,000</span>
-                            <span class="currency">TWD</span>
-                        </div>
-                        
-                        <!-- Premium larger slider -->
-                        <div class="slider-container">
-                            <input type="range" id="cashback-slider" class="premium-slider" min="0" max="100000" step="1000" value="50000">
-                            <div class="slider-labels">
-                                <span>0</span>
-                                <span>25,000</span>
-                                <span>50,000</span>
-                                <span>75,000</span>
-                                <span>100,000</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="calculator-divider"></div>
-                    
-                    <div class="calculator-result">
-                        <div class="result-label">預估現金回饋</div>
-                        <div class="big-number-display">
-                            <span id="cashback-result">1,750</span>
-                            <span class="currency">TWD</span>
-                        </div>
-                        <div class="result-note">基於 Smart Rate 3.5% 計算</div>
-                    </div>
-                </div>
-            </section>
+
 
             <div class="content-grid">
                 <!-- 左側主內容 -->
                 <div class="main-content">
-                    
+
+                    <!-- Apple-Style 現金回饋計算器 (Moved Here) -->
+                    <section class="calculator-zone">
+                        <div class="section-header">
+                            <h2><i class="fa-solid fa-calculator"></i> 現金回饋計算器</h2>
+                            <span class="tag-pulse">Smart Rate 3.5%</span>
+                        </div>
+                        <div class="calculator-container">
+                            <div class="calculator-input-group">
+                                <div class="input-label">消費金額 (TWD)</div>
+                                <div class="big-number-display">
+                                    <span id="cashback-amount">50,000</span>
+                                    <span class="currency">TWD</span>
+                                </div>
+                                <div class="slider-container">
+                                    <input type="range" id="cashback-slider" class="premium-slider ios-slider" min="0"
+                                        max="100000" step="1000" value="50000">
+                                </div>
+                            </div>
+                            <div class="calculator-result">
+                                <div class="result-label">預估現金回饋</div>
+                                <div class="big-number-display">
+                                    <span id="cashback-result">1,750</span>
+                                    <span class="currency">TWD</span>
+                                </div>
+                                <div class="result-note">基於 Smart Rate 3.5% 計算</div>
+                            </div>
+                        </div>
+                    </section>
+
                     <!-- 百貨優惠整合 -->
                     <section class="dept-store-section">
                         <div class="section-header">
@@ -250,7 +244,8 @@
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
                             <div class="card-image-container">
-                                <img src="https://placehold.co/600x360/ffedee/d32f2f/?text=Fubon+J+Card" alt="富邦 J 卡示意圖" class="card-image">
+                                <img src="https://placehold.co/600x360/ffedee/d32f2f/?text=Fubon+J+Card" alt="富邦 J 卡示意圖"
+                                    class="card-image">
                             </div>
                             <div class="card-title">富邦 J 卡 日本消費最高 5%</div>
                             <div class="card-body">
@@ -272,7 +267,8 @@
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
                             <div class="card-image-container">
-                                <img src="https://placehold.co/600x360/e8f5e9/2e7d32/?text=DBS+eco+Card" alt="星展 eco 永續卡示意圖" class="card-image">
+                                <img src="https://placehold.co/600x360/e8f5e9/2e7d32/?text=DBS+eco+Card"
+                                    alt="星展 eco 永續卡示意圖" class="card-image">
                             </div>
                             <div class="card-title">星展 eco 永續卡 綠色消費 3%</div>
                             <div class="card-body">
@@ -285,7 +281,7 @@
                                 </button>
                             </div>
                         </article>
-                        
+
                         <!-- 卡片 3: Union Jihe Card -->
                         <article class="card" data-bank="union" data-type="cash" data-keywords="百貨 餐飲 交通">
                             <div class="card-header">
@@ -293,7 +289,8 @@
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
                             <div class="card-image-container">
-                                <img src="https://placehold.co/600x360/ffebee/c62828/?text=Union+Jihe+Card" alt="聯邦吉鶴卡示意圖" class="card-image">
+                                <img src="https://placehold.co/600x360/ffebee/c62828/?text=Union+Jihe+Card"
+                                    alt="聯邦吉鶴卡示意圖" class="card-image">
                             </div>
                             <div class="card-title">聯邦吉鶴卡 日本消費最高 10%</div>
                             <div class="card-body">
@@ -314,7 +311,8 @@
                                 <button class="card-subscribe-btn" title="追蹤此卡">⭐</button>
                             </div>
                             <div class="card-image-container">
-                                <img src="https://placehold.co/600x360/212121/ffffff/?text=HSBC+Live%2B" alt="滙豐 Live+ 卡示意圖" class="card-image">
+                                <img src="https://placehold.co/600x360/212121/ffffff/?text=HSBC+Live%2B"
+                                    alt="滙豐 Live+ 卡示意圖" class="card-image">
                             </div>
                             <div class="card-title">滙豐 Live+ 卡 影音娛樂 8%</div>
                             <div class="card-body">
@@ -368,7 +366,7 @@
                     <!-- 內容卡片將由 JavaScript 動態生成 -->
                 </div>
             </section>
-            
+
             <!-- 額外資訊欄 (可收合) -->
             <section class="info-section collapsed" id="info-section">
                 <div class="info-header">
@@ -414,4 +412,5 @@
 
     <script type="module" src="script.js"></script>
 </body>
+
 </html>
