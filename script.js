@@ -77,11 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 11. 🔐 Firebase Auth 會員系統
     setupFirebaseAuth();
 
-    // 12. ⏰ 緊急優惠倒數計時
-    setupUrgentCountdown();
-
-    // 13. 🔒 Insider Vault 功能 (CSV 獲取 + 每日採樣 + 緩存)
-    setupInsiderVault();
+    // 12. 🔒 Insider Vault Revamp (Fixed 4 Cards)
+    setupNewInsiderVault();
 
     // 14. 🧮 Apple 風格現金回饋計算器
     setupCashbackCalculator();
@@ -593,463 +590,74 @@ function setupFirebaseAuth() {
 }
 
 // ===== URGENT ZONE COUNTDOWN =====
-function setupUrgentCountdown() {
-    const countdownEl = document.getElementById('urgent-countdown');
-    if (!countdownEl) return;
 
-    // 設定目標時間 (今天午夜)
-    const updateCountdown = () => {
-        const now = new Date();
-        const midnight = new Date();
-        midnight.setHours(23, 59, 59, 999);
 
-        const diff = midnight - now;
+// ===== INSIDER VAULT REVAMP (Fixed Content) =====
+function setupNewInsiderVault() {
+    const vaultGrid = document.getElementById('vault-grid-v2');
+    if (!vaultGrid) return;
 
-        if (diff <= 0) {
-            countdownEl.textContent = '優惠已結束';
-            return;
-        }
-
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-        countdownEl.textContent = `剩餘 ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    };
-
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-}
-
-// ===== INSIDER VAULT (CSV 獲取 + 每日採樣 + 緩存) =====
-function setupInsiderVault() {
-    const CSV_URL = "https://docs.google.com/spreadsheets/d/1Vnvpz_B6FOXSPQFZPp9yDULEDel1_50CQj1sH2uDJnI/export?format=csv";
-    const CACHE_KEY_PREFIX = "cardubi_vault_";
-    const urgentCardsContainer = document.getElementById('urgent-cards');
-
-    if (!urgentCardsContainer) {
-        console.warn('找不到 #urgent-cards 容器');
-        return;
-    }
-
-    // 更新倒數計時器文字為「今日精選」
-    const countdownEl = document.getElementById('urgent-countdown');
-    if (countdownEl) {
-        countdownEl.textContent = '今日精選';
-    }
-
-    // 獲取今天的日期字串 (YYYY-MM-DD)
-    function getTodayKey() {
-        const now = new Date();
-        return CACHE_KEY_PREFIX + now.toISOString().split('T')[0];
-    }
-
-    // 清理舊的緩存 (保留最近7天)
-    function cleanupOldCache() {
-        const today = new Date();
-        const sevenDaysAgo = new Date(today);
-        sevenDaysAgo.setDate(today.getDate() - 7);
-
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key.startsWith(CACHE_KEY_PREFIX)) {
-                const dateStr = key.replace(CACHE_KEY_PREFIX, '');
-                const cacheDate = new Date(dateStr);
-                if (cacheDate < sevenDaysAgo) {
-                    localStorage.removeItem(key);
-                }
-            }
-        }
-    }
-
-    // 解析 CSV 行 (處理逗號和引號)
-    function parseCSVRow(row) {
-        const result = [];
-        let current = '';
-        let inQuotes = false;
-
-        for (let i = 0; i < row.length; i++) {
-            const char = row[i];
-            const nextChar = row[i + 1];
-
-            if (char === '"') {
-                if (inQuotes && nextChar === '"') {
-                    current += '"';
-                    i++; // 跳過下一個引號
-                } else {
-                    inQuotes = !inQuotes;
-                }
-            } else if (char === ',' && !inQuotes) {
-                result.push(current.trim());
-                current = '';
-            } else {
-                current += char;
-            }
-        }
-
-        result.push(current.trim());
-        return result;
-    }
-
-    // 解析 CSV 數據
-    function parseCSVData(csvText) {
-        const lines = csvText.split('\n').filter(line => line.trim());
-        if (lines.length < 2) return [];
-
-        // 嘗試檢測標題行 (支援中英文別名)
-        const headerLine = lines[0];
-        const headers = parseCSVRow(headerLine);
-
-        // 建立欄位映射 - 根據實際CSV結構調整
-        const fieldMap = {
-            bank: headers.findIndex(h =>
-                ['bank', 'Bank', '銀行', 'Bank Name', '銀行名稱'].includes(h.trim())
-            ),
-            appName: headers.findIndex(h =>
-                ['card', 'Card', '卡片', '信用卡', 'credit card'].includes(h.trim())
-            ),
-            offerTitle: headers.findIndex(h =>
-                ['content', 'Content', '內容', '優惠內容', 'offer content'].includes(h.trim())
-            ),
-            endDate: headers.findIndex(h =>
-                ['累積消費', '累計消費', '消費門檻', 'spending threshold'].includes(h.trim())
-            ),
-            hiddenNote: headers.findIndex(h =>
-                ['活動連結', '活動鏈接', 'link', '活動網址', '活動URL'].includes(h.trim())
-            )
-        };
-
-        // 解析數據行
-        const offers = [];
-        for (let i = 1; i < lines.length; i++) {
-            const row = parseCSVRow(lines[i]);
-            if (row.length < Math.max(...Object.values(fieldMap).filter(idx => idx !== -1))) {
-                continue; // 跳過不完整的行
-            }
-
-            const offer = {
-                bank: fieldMap.bank !== -1 ? row[fieldMap.bank] : '',
-                appName: fieldMap.appName !== -1 ? row[fieldMap.appName] : '',
-                offerTitle: fieldMap.offerTitle !== -1 ? row[fieldMap.offerTitle] : '',
-                endDate: fieldMap.endDate !== -1 ? row[fieldMap.endDate] : '',
-                hiddenNote: fieldMap.hiddenNote !== -1 ? row[fieldMap.hiddenNote] : ''
-            };
-
-            offers.push(offer);
-        }
-
-        return offers;
-    }
-
-    // 過濾已過期的優惠
-    function filterExpiredOffers(offers) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        return offers.filter(offer => {
-            if (!offer.endDate || offer.endDate.trim() === '') {
-                return true; // 沒有結束日期，保留
-            }
-
-            try {
-                // 嘗試解析各種日期格式
-                const dateStr = offer.endDate.trim();
-                let endDate;
-
-                // 嘗試 YYYY/MM/DD 格式
-                if (dateStr.includes('/')) {
-                    const parts = dateStr.split('/');
-                    if (parts.length === 3) {
-                        endDate = new Date(parts[0], parts[1] - 1, parts[2]);
-                    }
-                }
-
-                // 嘗試 YYYY-MM-DD 格式
-                if (!endDate && dateStr.includes('-')) {
-                    endDate = new Date(dateStr);
-                }
-
-                // 如果解析失敗，保留優惠 (fail-safe)
-                if (!endDate || isNaN(endDate.getTime())) {
-                    return true;
-                }
-
-                endDate.setHours(23, 59, 59, 999);
-                return endDate >= today;
-            } catch (error) {
-                console.warn('日期解析失敗:', offer.endDate, error);
-                return true; // 解析失敗時保留
-            }
-        });
-    }
-
-    // 採樣邏輯：從最多4家不同銀行中各選1個優惠
-    function sampleOffers(offers) {
-        if (offers.length === 0) return [];
-
-        // 按銀行分組
-        const bankGroups = {};
-        offers.forEach(offer => {
-            const bank = offer.bank.trim();
-            if (!bankGroups[bank]) {
-                bankGroups[bank] = [];
-            }
-            bankGroups[bank].push(offer);
-        });
-
-        // 獲取銀行列表並隨機排序
-        const banks = Object.keys(bankGroups);
-        const shuffledBanks = [...banks].sort(() => Math.random() - 0.5);
-
-        // 從最多4家不同銀行中各選1個優惠
-        const selectedOffers = [];
-        const maxBanks = Math.min(4, shuffledBanks.length);
-
-        for (let i = 0; i < maxBanks; i++) {
-            const bank = shuffledBanks[i];
-            const bankOffers = bankGroups[bank];
-            if (bankOffers && bankOffers.length > 0) {
-                // 隨機選擇一個優惠
-                const randomIndex = Math.floor(Math.random() * bankOffers.length);
-                selectedOffers.push(bankOffers[randomIndex]);
-            }
-        }
-
-        return selectedOffers;
-    }
-
-    // 渲染優惠卡片 (始終顯示4張卡片)
-    function renderOffers(offers) {
-        urgentCardsContainer.innerHTML = '';
-
-        // 驗證卡片有效性：必須包含Bank、Offer Title、Hidden Note
-        const validOffers = offers.filter(offer =>
-            offer.bank && offer.bank.trim() &&
-            offer.offerTitle && offer.offerTitle.trim() &&
-            offer.hiddenNote && offer.hiddenNote.trim()
-        );
-
-        // [MODIFIED] Force the 4th card (index 3) to be distinct to avoid duplicates
-        const taishinCard = {
+    // Hardcoded offers for the 4 Treasure Cards
+    const treasureOffers = [
+        {
+            bank: '中國信託',
+            card: 'LINE Pay VISA卡',
+            offer: '於Uber Eats刷中信卡累積消費滿666元，享10%現金回饋（刷卡金回饋需登錄，每戶每月回饋上限100元，每月限10,000組）',
+            date: '2026/01/31'
+        },
+        {
+            bank: '星展銀行',
+            card: '飛行世界之極卡',
+            offer: '升等商務艙、免費貴賓室，至海外指定店家消費，即享回饋',
+            date: '無' // Special case: No expiry
+        },
+        {
+            bank: '國泰世華',
+            card: 'Cube卡',
+            offer: '登入CUBE App完成領取Hotels.com專屬優惠券，並前往Hotels.com x CUBE信用卡專屬網頁刷CUBE信用卡預定飯店/住宿享加碼5%小樹點(信用卡)！',
+            date: '2026/01/31'
+        },
+        {
             bank: '台新銀行',
-            appName: 'GoGo 卡',
-            offerTitle: '指定行動支付最高 3.8%!',
-            endDate: '2025/12/31',
-            hiddenNote: '需使用 Richart 帳戶扣款'
-        };
-
-        const federalCard = {
-            bank: '聯邦銀行',
-            appName: '吉鶴卡',
-            offerTitle: '日本消費最高 4% 回饋',
-            endDate: '2025/12/31',
-            hiddenNote: '綁定 Apple Pay 加碼'
-        };
-
-        // Ensure we have 4 distinct cards
-        if (validOffers.length < 4) {
-            // Add Taishin if not present (simple check)
-            if (!validOffers.some(o => o.appName.includes('GoGo'))) {
-                validOffers.push(taishinCard);
-            }
-            // Add Federal if still < 4
-            if (validOffers.length < 4 && !validOffers.some(o => o.appName.includes('吉鶴'))) {
-                validOffers.push(federalCard);
-            }
+            card: 'Gogoro Rewards聯名卡',
+            offer: '於PBGN集團內購車買電動機車，一次付清享基本回饋最高1%，再加碼1%點數回饋無上限。分期購車享基本回饋最高1%，再享1,200點。',
+            date: '2026/01/31'
         }
+    ];
 
-        // Ensure index 3 is Taishin if we have enough cards (user preference from before?)
-        // Or just let natural order flow if we have 4 unique ones.
-        // Let's just ensure we rely on the list we built.
+    // Clear and render
+    vaultGrid.innerHTML = '';
 
-        // 始終顯示4張卡片
-        const totalCards = 4;
-
-        if (validOffers.length === 0) {
-            // 如果沒有任何有效卡片，顯示訊息
-            const message = document.createElement('div');
-            message.className = 'vault-message';
-            message.innerHTML = `
-                  <div class="vault-empty">
-                      <i class="fas fa-box-open"></i>
-                      <p>本週精選不足 4 家，持續補貨中</p>
-                  </div>
-              `;
-            urgentCardsContainer.appendChild(message);
-            return;
-        }
-
-        // 渲染卡片
-        for (let i = 0; i < totalCards; i++) {
-            const offerIndex = i % validOffers.length;
-            const offer = validOffers[offerIndex];
-            createOfferCard(offer, i, false);
-        }
-    }
-
-    // 創建有效優惠卡片
-    function createOfferCard(offer, index, isPlaceholder = false) {
+    treasureOffers.forEach(item => {
         const card = document.createElement('div');
-        card.className = 'urgent-card vault-card';
-        card.dataset.index = index;
-        card.dataset.isPlaceholder = isPlaceholder;
-        card.tabIndex = 0;
+        card.className = 'treasure-card';
 
-        // 使用後備值
-        const bankName = offer.bank || '未知銀行';
-        const offerTitle = offer.offerTitle || '未命名優惠';
-        const appName = offer.appName || '銀行App';
+        // Handle expiration text logic
+        const dateDisplay = (item.date === '無') ? '無期限' : `期限：${item.date}`;
 
         card.innerHTML = `
-              <div class="vault-card-inner">
-                  <div class="vault-row vault-row-bank">
-                      <span class="bank-label">${bankName}</span>
-                  </div>
-                  <div class="vault-row vault-row-card">
-                      <span class="card-label">${appName}</span>
-                  </div>
-                  <div class="vault-divider"></div>
-                  <div class="vault-row vault-row-content">
-                      <p class="content-label">${offerTitle}</p>
-                  </div>
-                  <div class="vault-card-footer">
-                       <span class="vault-date">${offer.endDate ? '期限: ' + offer.endDate : '限時優惠'}</span>
-                  </div>
-              </div>
-          `;
+            <div class="treasure-row row-bank">
+                <div class="t-label">銀行</div>
+                <div class="t-value">${item.bank}</div>
+            </div>
+            <div class="treasure-row row-card">
+                <div class="t-label">信用卡</div>
+                <div class="t-value">${item.card}</div>
+            </div>
+            <div class="treasure-row row-offer">
+                <div class="t-label">優惠資訊</div>
+                <div class="t-value">${item.offer}</div>
+            </div>
+            <div class="treasure-row row-date">
+                <div class="t-label">有效期限</div>
+                <div class="t-value">${dateDisplay}</div>
+            </div>
+        `;
 
-        urgentCardsContainer.appendChild(card);
-    }
-
-    // 創建占位符卡片 (簡化版)
-    function createPlaceholderCard(index) {
-        const card = document.createElement('div');
-        card.className = 'urgent-card vault-card placeholder';
-        card.dataset.index = index;
-        card.dataset.isPlaceholder = true;
-        card.tabIndex = 0;
-
-        card.innerHTML = `
-              <div class="vault-card-inner">
-                  <div class="vault-card-content">
-                      <div class="vault-card-header">
-                          <span class="placeholder-tag">資料補貨中</span>
-                      </div>
-                      <div class="vault-card-main">
-                          <div class="bank-logo-placeholder placeholder">
-                              <i class="fas fa-clock"></i>
-                          </div>
-                          <h4 class="offer-title">即將上線</h4>
-                          <div class="offer-meta">
-                              <div class="meta-item">
-                                  <i class="fas fa-university"></i>
-                                  <span>銀行名稱</span>
-                              </div>
-                              <div class="meta-item">
-                                  <i class="fas fa-mobile-alt"></i>
-                                  <span>銀行App</span>
-                              </div>
-                              <div class="meta-item">
-                                  <i class="fas fa-calendar-alt"></i>
-                                  <span>未標示期限</span>
-                              </div>
-                          </div>
-                          <div class="hidden-note">
-                              <i class="fas fa-sticky-note"></i>
-                              <p>詳情請見 App 內活動頁</p>
-                          </div>
-                      </div>
-                      <div class="vault-card-footer">
-                          <span class="bank-name">銀行名稱</span>
-                      </div>
-                  </div>
-              </div>
-          `;
-
-        urgentCardsContainer.appendChild(card);
-    }
-
-    // 主執行函數
-    async function executeVaultLogic() {
-        cleanupOldCache();
-
-        const todayKey = getTodayKey();
-        const cachedData = localStorage.getItem(todayKey);
-
-        if (cachedData) {
-            // 使用緩存的選擇
-            try {
-                const cachedOffers = JSON.parse(cachedData);
-                console.log('使用緩存的 Insider Vault 選擇');
-                renderOffers(cachedOffers);
-                return;
-            } catch (e) {
-                console.warn('緩存解析失敗，重新獲取數據', e);
-            }
-        }
-
-        // 沒有緩存或緩存無效，重新獲取數據
-        try {
-            console.log('獲取 CSV 數據...');
-
-            // 使用更健壯的fetch選項，處理重定向和CORS
-            const fetchOptions = {
-                method: 'GET',
-                mode: 'cors', // 明確設置CORS模式
-                credentials: 'omit', // 不發送憑證，避免CORS問題
-                redirect: 'follow', // 明確跟隨重定向
-                headers: {
-                    'Accept': 'text/csv,text/plain,*/*',
-                    'Cache-Control': 'no-cache'
-                }
-            };
-
-            const response = await fetch(CSV_URL, fetchOptions);
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const csvText = await response.text();
-            const allOffers = parseCSVData(csvText);
-
-            if (allOffers.length === 0) {
-                throw new Error('CSV 數據為空或解析失敗');
-            }
-
-            console.log(`成功解析 ${allOffers.length} 個優惠`);
-
-            // 過濾和採樣
-            const validOffers = filterExpiredOffers(allOffers);
-            console.log(`過濾後剩餘 ${validOffers.length} 個有效優惠`);
-
-            const sampledOffers = sampleOffers(validOffers);
-            console.log(`採樣選擇 ${sampledOffers.length} 個優惠`);
-
-            // 緩存今天的選擇
-            localStorage.setItem(todayKey, JSON.stringify(sampledOffers));
-
-            // 渲染卡片
-            renderOffers(sampledOffers);
-
-        } catch (error) {
-            console.error('Insider Vault 錯誤:', error);
-
-            // 顯示錯誤訊息
-            urgentCardsContainer.innerHTML = `
-                  <div class="vault-error">
-                      <i class="fas fa-exclamation-triangle"></i>
-                      <p>暫時無法載入精選優惠</p>
-                      <p class="error-detail">${error.message}</p>
-                      <button class="retry-btn" onclick="setupInsiderVault()">重試</button>
-                  </div>
-              `;
-        }
-    }
-
-    // 初始化
-    executeVaultLogic();
+        vaultGrid.appendChild(card);
+    });
 }
+
 
 // ===== APPLE 風格現金回饋計算器 =====
 function setupCashbackCalculator() {
